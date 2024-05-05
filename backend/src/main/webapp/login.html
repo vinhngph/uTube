@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<body>
+    <form action="./login" method="post" id="form-login">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Login">
+    </form>
+
+    <h1 id="ERROR_LOGIN"></h1>
+
+    <script>
+        document.getElementById("form-login").addEventListener('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        window.location.href = '.';
+                    } else {
+                        document.getElementById("ERROR_LOGIN").innerText = "Invalid username or password. Please try again.";
+                    }
+                }
+            };
+            xhr.send(new URLSearchParams(formData).toString());
+        });
+    </script>
+</body>
+
+</html>
