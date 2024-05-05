@@ -14,7 +14,7 @@
 
 <body>
     <div class="container">
-        <form id="registrationForm" action="./register" method="POST">
+        <form id="form-register" action="./register" method="POST">
             <div id="step1">
                 <h2>Step 1: Account Information</h2>
                 <label for="email">Email:</label><br>
@@ -29,7 +29,7 @@
                 <input type="hidden" name="session_device" value="" id="session_device">
                 <input type="hidden" name="session_time" value="" id="session_time">
 
-                <button type="button" onclick="nextStep()">Register</button>
+                <button type="button" onclick="isExist()">Register</button>
             </div>
 
             <div id="step2" class="hidden">
@@ -44,15 +44,42 @@
                 <button type="submit">Send</button>
             </div>
         </form>
+
+        <h1 id="ERROR"></h1>
     </div>
 
     <script>
+        function isExist() {
+            let email = document.getElementById('email').value;
+            let username = document.getElementById('username').value;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/isUser', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 202) {
+                        nextStep();
+                    } else if (xhr.status === 406) {
+                        document.getElementById("ERROR").innerText = "Email or username already exists!";
+                    } else {
+                        document.getElementById("ERROR").innerText = "Somethings wrong happen!";
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({
+                email: email,
+                username: username
+            }));
+        }
+
         function nextStep() {
+            document.getElementById("ERROR").style.display = "none";
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
             let sessionDevice = window.navigator.userAgent;
             document.getElementById('session_device').value = sessionDevice;
-            
+
             let year = new Date().getFullYear();
             let month = new Date().getMonth() + 1;
             let day = new Date().getDate();
@@ -67,6 +94,26 @@
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('step1').classList.remove('hidden');
         }
+
+        document.getElementById('form-register').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/register', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        window.location.href = '.';
+                    } else if (xhr.status === 401) {
+                        document.getElementById('ERROR').innerText = 'Failed to auto login!';
+                    } else {
+                        document.getElementById('ERROR').innerText = 'Failed to register!';
+                    }
+                }
+            };
+            xhr.send(new URLSearchParams(formData).toString());
+        });
     </script>
 </body>
 

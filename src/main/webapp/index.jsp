@@ -23,6 +23,10 @@
 <% if (name != null) { %>
 <h1>Hello <%= name%>
 </h1>
+<form action="/logout" method="post">
+    <input type="submit" value="Logout">
+</form>
+
 <% } else { %>
 <a href="./login">Login</a>
 <br>

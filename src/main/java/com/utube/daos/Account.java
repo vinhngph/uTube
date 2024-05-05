@@ -30,7 +30,6 @@ public class Account {
             int userId = 0;
             if (rs.next()) {
                 userId = rs.getInt(1);
-                System.out.println("User ID: " + userId);
             }
 
             stm = conn.prepareStatement(info);
@@ -74,7 +73,6 @@ public class Account {
                 conn.close();
 
                 User user = new User(user_id, user_username, user_email, user_password, user_role);
-                System.out.println(user.toString());
 
                 return user;
             }
@@ -83,26 +81,5 @@ public class Account {
         }
         DBConnect.closeConnection(conn);
         return null;
-    }
-
-    public static boolean checkExist(String email) {
-        Connection conn = DBConnect.getConnection();
-
-        try {
-            String query = "SELECT * FROM User WHERE user_email = ?";
-            PreparedStatement stm = conn.prepareStatement(query);
-            stm.setString(1, email);
-            ResultSet rs = stm.executeQuery();
-            
-            if (rs.next()) {
-                conn.close();
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        DBConnect.closeConnection(conn);
-        return false;
     }
 }

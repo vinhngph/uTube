@@ -38,23 +38,26 @@ public class Register extends HttpServlet {
         Timestamp sessionTime = Timestamp.valueOf(request.getParameter("session_time"));
 
         boolean register = Account.registerUser(email, username, password, fullName, dob, sessionDevice, sessionTime);
-        User user = Account.getUser(username, password);
-        if (user != null) {
-            Cookie user_id = new Cookie("user_id", String.valueOf(user.getUserId()));
-            Cookie user_name = new Cookie("user_name", user.getUsername());
-            Cookie user_email = new Cookie("user_email", user.getEmail());
-            Cookie user_role = new Cookie("user_role", String.valueOf(user.getRole()));
-
-            response.addCookie(user_id);
-            response.addCookie(user_name);
-            response.addCookie(user_email);
-            response.addCookie(user_role);
-        }
 
         if (register) {
-            response.sendRedirect("/");
+            User user = Account.getUser(username, password);
+            if (user != null) {
+                Cookie user_id = new Cookie("user_id", String.valueOf(user.getUserId()));
+                Cookie user_name = new Cookie("user_name", user.getUsername());
+                Cookie user_email = new Cookie("user_email", user.getEmail());
+                Cookie user_role = new Cookie("user_role", String.valueOf(user.getRole()));
+
+                response.addCookie(user_id);
+                response.addCookie(user_name);
+                response.addCookie(user_email);
+                response.addCookie(user_role);
+
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
         } else {
-            response.sendRedirect("./register");
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 }

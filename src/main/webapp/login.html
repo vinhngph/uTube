@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form action="./login" method="post">
+    <form action="./login" method="post" id="form-login">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         <br>
@@ -17,6 +17,28 @@
         <br>
         <input type="submit" value="Login">
     </form>
+
+    <h1 id="ERROR_LOGIN"></h1>
+
+    <script>
+        document.getElementById("form-login").addEventListener('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        window.location.href = '.';
+                    } else {
+                        document.getElementById("ERROR_LOGIN").innerText = "Invalid username or password. Please try again.";
+                    }
+                }
+            };
+            xhr.send(new URLSearchParams(formData).toString());
+        });
+    </script>
 </body>
 
 </html>
