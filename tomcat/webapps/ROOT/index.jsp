@@ -8,6 +8,25 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+<%
+    Cookie[] cookies = request.getCookies();
+    String name = null;
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("user_name")) {
+                name = cookie.getValue();
+            }
+        }
+    }
+%>
+
+<% if (name != null) { %>
+<h1>Hello <%= name%>
+</h1>
+<% } else { %>
+<a href="./login">Login</a>
+<br>
+<a href="./register">Register</a>
+<% } %>
 </body>
 </html>
