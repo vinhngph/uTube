@@ -15,7 +15,7 @@ nav{
     width: 130px;   
 }
 .nav-middle .search-box{
-    border: 1px solid #dd0e0e;
+    border: 1px solid #ccc;
     margin-right: 15px;
     padding: 8px 12px;
     border-radius: 25px;
@@ -37,3 +37,28 @@ nav{
     width: 35px;
     border-radius: 50%;
 }
+.dropdown-content {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 1px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 8px 0;
+    max-height: 200px; /* Set a maximum height for the dropdown */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+    overflow-x: hidden; /* Hide horizontal scrollbar if content exceeds max width */
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }  
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+  
