@@ -1,10 +1,17 @@
 import React from 'react'
 import './Home.css'
+import Sidebar from '../../Components/Sidebar/Sidebar'
+import Feed from '../../Components/Feed/Feed'
 
-const home = () => {
+const Home = ({sidebar}) => {
   return (
-    <div>home</div>
+    <>
+      <Sidebar sidebar={sidebar} />
+      <div className={`container ${sidebar?"":'large-container'}`}>
+        <Feed/>
+      </div>
+    </>
   )
 }
 
-export default home
+export default Home
