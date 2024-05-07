@@ -65,8 +65,8 @@ const Register = () => {
                     <label htmlFor="dob">Date of Birth:</label>
                     <input type="date" id="dob" name="dob" required />
                   </div>
-
-                  <button type="button" onClick={prevStep}>Back</button><br />
+                
+                  <button type="button" onClick={prevStep}>Back</button>
                   <button type="submit">Complete</button>
                 </div>
               )}

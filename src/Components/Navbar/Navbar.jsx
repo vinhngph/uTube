@@ -39,7 +39,7 @@ const Navbar = ({ setSidebar }) => {
           {showDropdown && (
             <div className='dropdown-content'>
               <Link to='/login'>Login</Link>
-              <a href='#'>Sign Out</a>
+              <a href='/login'>Sign Out</a>
             </div>
           )}
         </div>

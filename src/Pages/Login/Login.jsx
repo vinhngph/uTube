@@ -1,27 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css';
-import { FaUser } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
+import { FaUser, FaLock } from "react-icons/fa";
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+
 const Login = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new URLSearchParams();
+      formData.append('username', username);
+      formData.append('password', password);
+
+      const response = await fetch('http://18.139.19.28:4000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData,
+        credentials: 'include', // Include cookies in the request
+      });
+
+      // Handle response
+      if (response.ok) {
+        // Redirect or perform actions upon successful login
+        window.location.href = '/'; // Example redirect
+      } else {
+        // Handle failed login (e.g., display error message)
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <>
       {isLoginPage && (
         <div className={`container ${isLoginPage ? 'login-background' : ''}`}>
           <div className='wrapper'>
-            <form action='/ '>
+            <form onSubmit={handleSubmit}>
               <h1>Login</h1>
               <div className='input-box'>
                 <input
                   type='text'
                   placeholder='Username'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
-                  //value={username}
-                  //onChange={(e) => setUsername(e.target.value)}
                 />
                 <FaUser className='icon' />
               </div>
@@ -29,9 +61,9 @@ const Login = () => {
                 <input
                   type='password'
                   placeholder='Password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  //value={password}
-                  //onChange={(e) => setPassword(e.target.value)}
                 />
                 <FaLock className='icon' />
               </div>
