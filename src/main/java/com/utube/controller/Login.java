@@ -2,18 +2,20 @@ package com.utube.controller;
 
 import java.io.IOException;
 
+import com.google.gson.Gson;
 import com.utube.daos.Account;
 import com.utube.dtos.User;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = { "/login" })
+@MultipartConfig()
 public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,17 +33,10 @@ public class Login extends HttpServlet {
         User user = Account.getUser(username, password);
 
         if (user != null) {
-            Cookie user_id = new Cookie("user_id", String.valueOf(user.getUserId()));
-            Cookie user_name = new Cookie("user_name", user.getUsername());
-            Cookie user_email = new Cookie("user_email", user.getEmail());
-            Cookie user_role = new Cookie("user_role", String.valueOf(user.getRole()));
-
-            response.addCookie(user_id);
-            response.addCookie(user_name);
-            response.addCookie(user_email);
-            response.addCookie(user_role);
-
-            response.setStatus(HttpServletResponse.SC_OK);
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+            response.setContentType("application/json");
+            response.getWriter().write(json);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
