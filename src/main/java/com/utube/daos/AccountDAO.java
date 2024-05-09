@@ -4,20 +4,17 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 
-import com.utube.dtos.User;
+import com.utube.dtos.UserDTO;
 import com.utube.utils.DBConnect;
 
-public class Account {
-    public static boolean registerUser(String email, String username, String password, String fullName, Date dob,
-            String sessionDevice, Timestamp sessionTime) {
+public class AccountDAO {
+    public static boolean registerUser(String email, String username, String password, String fullName, Date dob) {
         Connection conn = DBConnect.getConnection();
 
         try {
             String user = "INSERT INTO User (user_username, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
             String info = "INSERT INTO UserInformation (user_id, user_fullname, user_dob) VALUES (?, ?, ?)";
-            String session = "INSERT INTO Session (session_user, session_time, session_device) VALUES (?, ?, ?)";
 
             PreparedStatement stm = conn.prepareStatement(user, PreparedStatement.RETURN_GENERATED_KEYS);
             stm.setString(1, username);
@@ -38,13 +35,7 @@ public class Account {
             stm.setDate(3, dob);
             stm.executeUpdate();
 
-            stm = conn.prepareStatement(session);
-            stm.setInt(1, userId);
-            stm.setTimestamp(2, sessionTime);
-            stm.setString(3, sessionDevice);
-            stm.executeUpdate();
-
-            conn.close();
+            DBConnect.closeConnection(conn);
 
             return true;
         } catch (Exception e) {
@@ -54,7 +45,7 @@ public class Account {
         return false;
     }
 
-    public static User getUser(String username, String password) {
+    public static UserDTO getUser(String username, String password) {
         Connection conn = DBConnect.getConnection();
 
         try {
@@ -70,9 +61,10 @@ public class Account {
                 String user_email = rs.getString("user_email");
                 String user_password = rs.getString("user_password");
                 int user_role = rs.getInt("user_role");
-                conn.close();
 
-                User user = new User(user_id, user_username, user_email, user_password, user_role);
+                DBConnect.closeConnection(conn);
+
+                UserDTO user = new UserDTO(user_id, user_username, user_email, user_password, user_role);
 
                 return user;
             }

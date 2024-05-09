@@ -3,10 +3,10 @@ package com.utube.controller;
 import java.io.IOException;
 
 import com.google.gson.Gson;
-import com.utube.daos.Account;
-import com.utube.dtos.User;
+import com.utube.daos.AccountDAO;
+import com.utube.daos.SessionDAO;
+import com.utube.dtos.UserDTO;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,21 +18,18 @@ import jakarta.servlet.http.HttpServletResponse;
 @MultipartConfig()
 public class Login extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./login.html");
-        dispatcher.forward(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        User user = Account.getUser(username, password);
+        String sessionTime = request.getParameter("sessionTime");
+        String sessionDevice = request.getParameter("sessionDevice");
 
+        UserDTO user = AccountDAO.getUser(username, password);
         if (user != null) {
+            SessionDAO.createSession(user.getUserId(), sessionTime, sessionDevice);
+
             Gson gson = new Gson();
             String json = gson.toJson(user);
             response.setContentType("application/json");

@@ -35,7 +35,3 @@ CREATE TABLE UserInformation (
     user_dob DATE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
-
-INSERT INTO User (user_username, user_email, user_password, user_role) VALUES (?, ?, ?, ?);
-INSERT INTO UserInformation (user_id, user_fullname, user_dob) VALUES (?, ?, ?);
-INSERT INTO Session (session_user, session_time, session_device) VALUES (?, ?, ?);

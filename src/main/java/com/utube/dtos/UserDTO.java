@@ -1,13 +1,13 @@
 package com.utube.dtos;
 
-public class User {
+public class UserDTO {
     private int userId;
     private String username;
     private String email;
     private String password;
     private int role;
 
-    public User(int userId, String username, String email, String password, int role) {
+    public UserDTO(int userId, String username, String email, String password, int role) {
         this.userId = userId;
         this.username = username;
         this.email = email;
