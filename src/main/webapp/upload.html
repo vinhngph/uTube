@@ -11,18 +11,23 @@
     <form id="uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
         <label for="videoUploader">Upload</label>
         <input type="file" name="videoFile" id="videoUploader" accept="video/*" required>
+        <br>
 
         <label for="userId">User ID</label>
         <input type="text" name="userId" value="1000">
+        <br>
 
         <label for="title">Title</label>
         <input type="text" name="title" id="title" required>
+        <br>
 
         <label for="description">Description</label>
         <textarea name="description" id="description" required></textarea>
+        <br>
 
         <label for="thumbnail">Thumbnail</label>
-        <input type="text" id="thumbnail" name="thumbnail" required>
+        <input type="file" id="thumbnail" name="thumbnailFile" required>
+        <br>
 
         <input type="submit" value="SEND" id="uploadButton">
         <input type="button" value="CANCEL" id="cancelButton">

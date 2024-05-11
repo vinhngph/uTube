@@ -1,6 +1,7 @@
 package com.utube.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import com.google.gson.Gson;
 import com.utube.daos.AccountDAO;
@@ -20,11 +21,14 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Get input
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
-        String sessionTime = request.getParameter("sessionTime");
-        String sessionDevice = request.getParameter("sessionDevice");
+        // ----------------
+        
+        Timestamp sessionTime = new Timestamp(System.currentTimeMillis());
+        String sessionDevice = request.getHeader("User-Agent");
 
         UserDTO user = AccountDAO.getUser(username, password);
         if (user != null) {

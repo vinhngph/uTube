@@ -24,8 +24,7 @@ public class Upload extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Part part = request.getPart("videoFile");
-
+        // Generate video id
         String videoId = "";
         while (true) {
             videoId = VideoDAO.generateVideoId();
@@ -34,31 +33,39 @@ public class Upload extends HttpServlet {
             }
         }
 
+        // Prepare path for storage
         String storagePath = request.getServletContext().getRealPath(File.separator + "storage");
         Path storage = Paths.get(storagePath);
         if (!Files.exists(storage)) {
             Files.createDirectory(storage);
         }
 
+        // Prepare path for video
         String videoPath = storagePath + File.separator + videoId;
-        Path video = Paths.get(videoPath);
-        if (!Files.exists(video)) {
-            Files.createDirectory(video);
+        Path videoDir = Paths.get(videoPath);
+        if (!Files.exists(videoDir)) {
+            Files.createDirectory(videoDir);
         }
 
-        String fileName = videoPath + File.separator + videoId + ".webm";
+        // Get video file
+        Part video = request.getPart("videoFile");
+        // Save video
+        String videoName = videoPath + File.separator + videoId + ".webm";
+        video.write(videoName);
 
-        part.write(fileName);
+        // Get thumbnail file
+        Part thumbnail = request.getPart("thumbnailFile");
+        // Save thumbnail
+        String thumbnailName = videoPath + File.separator + videoId + ".png";
+        thumbnail.write(thumbnailName);
 
+        // Video's information
         int userId = Integer.parseInt(request.getParameter("userId"));
         String videoTitle = request.getParameter("title");
         String videoDescription = request.getParameter("description");
-        String videoThumbnail = request.getParameter("thumbnail");
         Timestamp videoDate = new Timestamp(System.currentTimeMillis());
 
-        VideoDTO videoDTO = new VideoDTO(videoId, videoTitle, videoDescription, videoThumbnail, videoDate);
+        VideoDTO videoDTO = new VideoDTO(videoId, videoTitle, videoDescription, videoDate);
         VideoDAO.addVideo(videoDTO, userId);
-
-        // thumbnail image
     }
 }

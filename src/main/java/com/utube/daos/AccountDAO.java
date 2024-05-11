@@ -20,7 +20,7 @@ public class AccountDAO {
             stm.setString(1, username);
             stm.setString(2, email);
             stm.setString(3, password);
-            stm.setInt(4, 103);
+            stm.setInt(4, 3);
             stm.executeUpdate();
 
             ResultSet rs = stm.getGeneratedKeys();

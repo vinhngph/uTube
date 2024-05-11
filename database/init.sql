@@ -1,5 +1,4 @@
-create database uTube;
-use uTube;
+USE uTube;
 
 CREATE TABLE Role (
     role_code INT PRIMARY KEY,
@@ -41,7 +40,6 @@ CREATE TABLE Video (
     video_id VARCHAR(255) PRIMARY KEY,
     video_title VARCHAR(255) NOT NULL,
     video_description VARCHAR(255) NOT NULL,
-    video_thumbnail VARCHAR(255) NOT NULL,
     video_date TIMESTAMP NOT NULL
 );
 
@@ -51,10 +49,3 @@ CREATE TABLE Upload (
     FOREIGN KEY (video_id) REFERENCES Video(video_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
-
-select * from Video;
-select * from Upload;	
-select * from User;
-
-INSERT INTO User (user_username, user_email, user_password, user_role) VALUES 
-('admin', 'admin@gmail', 'admin', 1)

@@ -41,7 +41,7 @@ public class VideoDAO {
     public static void addVideo(VideoDTO video, int userId) {
         Connection conn = DBConnect.getConnection();
 
-        String addVideo = "INSERT INTO Video (video_id, video_title, video_description, video_thumbnail, video_date) VALUES (?, ?, ?, ?, ?)";
+        String addVideo = "INSERT INTO Video (video_id, video_title, video_description, video_date) VALUES (?, ?, ?, ?)";
 
         String addVideoUser = "INSERT INTO Upload (video_id, user_id) VALUES (?, ?)";
 
@@ -50,8 +50,7 @@ public class VideoDAO {
             ps.setString(1, video.getVideoId());
             ps.setString(2, video.getVideoTitle());
             ps.setString(3, video.getVideoDescription());
-            ps.setString(4, video.getVideoThumbnail());
-            ps.setTimestamp(5, video.getVideoDate());
+            ps.setTimestamp(4, video.getVideoDate());
             ps.executeUpdate();
 
             ps = conn.prepareStatement(addVideoUser);
