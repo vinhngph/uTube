@@ -7,13 +7,31 @@ import upload_icon from '../../assets/upload.png';
 import more_icon from '../../assets/more.png';
 import notification_icon from '../../assets/notification.png';
 import profile_icon from '../../assets/jack.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ setSidebar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
+  };
+
+  const navigate = useNavigate();
+
+  const clearCookies = () => {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name.trim() + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    clearCookies();
+    navigate('/login');
   };
 
   return (
@@ -39,7 +57,7 @@ const Navbar = ({ setSidebar }) => {
           {showDropdown && (
             <div className='dropdown-content'>
               <Link to='/login'>Login</Link>
-              <a href='/login'>Sign Out</a>
+              <button onClick={handleLogout}>Logout</button>
             </div>
           )}
         </div>
