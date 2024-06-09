@@ -35,6 +35,7 @@ public class Upload extends HttpServlet {
 
         // Prepare path for storage
         String storagePath = request.getServletContext().getRealPath(File.separator + "storage");
+        // String storagePath = "/app/storage/";
         Path storage = Paths.get(storagePath);
         if (!Files.exists(storage)) {
             Files.createDirectory(storage);
