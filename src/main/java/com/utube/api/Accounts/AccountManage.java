@@ -3,7 +3,6 @@ package com.utube.api.Accounts;
 import java.io.IOException;
 
 import com.utube.daos.AccountDAO;
-import com.utube.dtos.UserInformationDTO;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
