@@ -1,7 +1,6 @@
 package com.utube.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 import com.google.gson.Gson;
 import com.utube.daos.AccountDAO;

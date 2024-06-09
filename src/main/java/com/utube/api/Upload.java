@@ -67,6 +67,11 @@ public class Upload extends HttpServlet {
         Timestamp videoDate = new Timestamp(System.currentTimeMillis());
 
         VideoDTO videoDTO = new VideoDTO(videoId, videoTitle, videoDescription, videoDate);
-        VideoDAO.addVideo(videoDTO, userId);
+
+        if (VideoDAO.addVideo(videoDTO, userId)) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 }
