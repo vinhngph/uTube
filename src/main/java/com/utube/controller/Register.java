@@ -31,7 +31,6 @@ public class Register extends HttpServlet {
         Date dob = Date.valueOf(request.getParameter("dob"));
         // ----------------
 
-        Timestamp sessionTime = new Timestamp(System.currentTimeMillis());
         String sessionDevice = request.getHeader("User-Agent");
 
         // Register user
@@ -39,7 +38,7 @@ public class Register extends HttpServlet {
         if (register) {
             UserDTO user = AccountDAO.getUser(username, password);
             if (user != null) {
-                SessionDAO.createSession(user.getUserId(), sessionTime, sessionDevice);
+                SessionDAO.createSession(user.getUserId(), sessionDevice);
 
                 Gson gson = new Gson();
                 String json = gson.toJson(user);

@@ -1,9 +1,10 @@
 package com.utube.daos;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.Instant;
+import java.util.ArrayList;
 
+import com.utube.dtos.SessionDTO;
 import com.utube.utils.DBConnect;
 
 public class SessionDAO {
@@ -21,9 +22,11 @@ public class SessionDAO {
         return null;
     }
 
-    public static void createSession(int userId, Timestamp sessionTime, String inputSessionDevice) {
+    public static void createSession(int userId, String inputSessionDevice) {
         Connection conn = DBConnect.getConnection();
+
         try {
+            Instant session_time = Instant.now();
             String query = "INSERT INTO Session (session_user, session_time, session_device) VALUES (?, ?, ?)";
             String sessionDevice = getSessionDevice(inputSessionDevice);
             if (sessionDevice == null) {
@@ -32,14 +35,41 @@ public class SessionDAO {
 
             PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, userId);
-            ps.setTimestamp(2, sessionTime);
+            ps.setTimestamp(2, Timestamp.from(session_time));
             ps.setString(3, sessionDevice);
             ps.executeUpdate();
 
-            DBConnect.closeConnection(conn);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DBConnect.closeConnection(conn);
         }
-        DBConnect.closeConnection(conn);
+    }
+
+    public static ArrayList<SessionDTO> getSession(int userId) {
+        Connection conn = DBConnect.getConnection();
+        ArrayList<SessionDTO> sessionList = new ArrayList<SessionDTO>();
+
+        try {
+            String query = "SELECT * FROM Session WHERE session_user = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int sessionId = rs.getInt("session_id");
+                String sessionTime = rs.getTimestamp("session_time").toInstant().toString();
+                String sessionDevice = rs.getString("session_device");
+
+                SessionDTO session = new SessionDTO(sessionId, userId, sessionTime, sessionDevice);
+                sessionList.add(session);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+        return sessionList;
     }
 }

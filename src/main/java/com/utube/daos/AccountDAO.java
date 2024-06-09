@@ -17,7 +17,7 @@ public class AccountDAO {
 
         try {
             String user = "INSERT INTO User (user_username, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
-            String info = "INSERT INTO UserInformation (user_id, user_fullname, user_dob) VALUES (?, ?, ?)";
+            String info = "INSERT INTO User_Information (user_id, user_fullname, user_dob) VALUES (?, ?, ?)";
 
             PreparedStatement stm = conn.prepareStatement(user, PreparedStatement.RETURN_GENERATED_KEYS);
             stm.setString(1, username);
@@ -41,7 +41,7 @@ public class AccountDAO {
             DBConnect.closeConnection(conn);
 
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         DBConnect.closeConnection(conn);
@@ -71,7 +71,7 @@ public class AccountDAO {
 
                 return user;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         DBConnect.closeConnection(conn);
@@ -140,7 +140,7 @@ public class AccountDAO {
         Connection conn = DBConnect.getConnection();
 
         try {
-            String query = "SELECT * FROM UserInformation WHERE user_id = ?";
+            String query = "SELECT * FROM User_Information WHERE user_id = ?";
             PreparedStatement stm = conn.prepareStatement(query);
             stm.setInt(1, user_id);
             ResultSet rs = stm.executeQuery();
@@ -208,7 +208,7 @@ public class AccountDAO {
         Connection conn = DBConnect.getConnection();
 
         try {
-            String query_1 = "DELETE FROM UserInformation WHERE user_id = ?";
+            String query_1 = "DELETE FROM User_Information WHERE user_id = ?";
             String query_2 = "DELETE FROM Session WHERE session_user = ?";
             String query_3 = "DELETE FROM Upload WHERE user_id = ?";
             String query_4 = "DELETE FROM User WHERE user_id = ?";
