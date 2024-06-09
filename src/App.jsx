@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import Navbar from './Components/Navbar/Navbar'
 import { useLocation } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom' 
-import Home from './Pages/Home/Home'
+import Home from './Pages/Home/home'
 import Video from './Pages/Video/Video'
 import Login from './Pages/Login/Login'
 import Register from './Pages/Register/Register'
+import UploadVideo from './Pages/UploadVideo/UploadVideo'
+import ManageAccount from './Pages/ManageAccount/ManageAccount';
 
 const App = () => {
   const location = useLocation();
@@ -22,6 +24,8 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Home sidebar={sidebar} />} />
+        <Route path='/upload' element={<UploadVideo />} />
+        <Route path='/manage-account' element={<ManageAccount />} />
         <Route path='/video/:categoryId/:videoId' element={<Video />} />
       </Routes>
     </div>

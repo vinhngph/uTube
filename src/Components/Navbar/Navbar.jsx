@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 import menu_icon from '../../assets/menu.png';
 import logo from '../../assets/logo.png';
@@ -11,9 +11,21 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ setSidebar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+      const [name, value] = cookie.split('=').map(c => c.trim());
+      acc[name] = decodeURIComponent(value);
+      return acc;
+    }, {});
+    if (cookies.user) {
+      setUser(JSON.parse(cookies.user));
+    }
+  }, []);
 
   const toggleDropdown = () => {
-    setShowDropdown((prev) => !prev);
+    setShowDropdown(prev => !prev);
   };
 
   const navigate = useNavigate();
@@ -34,30 +46,49 @@ const Navbar = ({ setSidebar }) => {
     navigate('/login');
   };
 
+  const handleUploadClick = () => {
+    navigate('/upload');
+  };
+
+  const handleManageAccount = () => {
+    navigate('/manage-account');
+  };
+
   return (
     <nav className='flex-div'>
-      <div className='nav-left flex-div'>
-        <img className='menu-icon' onClick={() => setSidebar((prev) => !prev)} src={menu_icon} alt='' />
-        <img className='logo' src={logo} alt='' />
+      <div className='nav-left'>
+        <img className='menu-icon' onClick={() => setSidebar(prev => !prev)} src={menu_icon} alt='Menu' />
+        <img className='logo' src={logo} alt='Logo' />
       </div>
 
-      <div className='nav-middle flex-div'>
-        <div className='search-box flex-div'>
+      <div className='nav-middle'>
+        <div className='search-box'>
           <input type='text' placeholder='Search' />
-          <img src={search_icon} alt='' />
+          <img src={search_icon} alt='Search' />
         </div>
       </div>
 
-      <div className='nav-right flex-div'>
-        <img src={upload_icon} alt='' />
-        <img src={more_icon} alt='' />
-        <img src={notification_icon} alt='' />
+      <div className='nav-right'>
+        <img src={upload_icon} alt='Upload' onClick={handleUploadClick} />
+        <img src={more_icon} alt='More' />
+        <img src={notification_icon} alt='Notifications' />
         <div className='user-dropdown' onClick={toggleDropdown}>
-          <img className='user-icon' src={profile_icon} alt='' />
+          <img className='user-icon' src={profile_icon} alt='Profile' />
           {showDropdown && (
             <div className='dropdown-content'>
-              <Link to='/login'>Login</Link>
-              <button onClick={handleLogout}>Logout</button>
+              {user ? (
+                <>
+                  <p>Account Info</p>
+                  <p>Switch Account</p>
+                  <button onClick={handleLogout}>Log Out</button>
+                  {(user.role === 1 || user.role === 2) && <button onClick={handleManageAccount}>Manage Account</button>}
+                </>
+              ) : (
+                <>
+                  <Link to='/login'>Sign In</Link>
+                  <Link to='/register'>Register</Link>
+                </>
+              )}
             </div>
           )}
         </div>

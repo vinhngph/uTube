@@ -1,0 +1,59 @@
+.manage-account {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #333;
+}
+
+td {
+    cursor: pointer;
+}
+
+td:hover {
+    background-color: #f0f0f0;
+}
+
+button {
+    margin-right: 12 px;
+    padding: 8px 16px;
+    border: none;
+    background-color: #c4302b;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #9b241e;
+}
+
+.message {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.error {
+    color: #c4302b;
+}
