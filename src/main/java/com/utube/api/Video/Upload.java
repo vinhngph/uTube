@@ -1,14 +1,14 @@
-package com.utube.api;
+package com.utube.api.Video;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 import com.utube.daos.VideoDAO;
-import com.utube.dtos.VideoDTO;
+import com.utube.dtos.VideoInformationDTO;
 import com.utube.utils.Config;
 
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-@WebServlet(urlPatterns = { "/api/upload" })
+@WebServlet(urlPatterns = { "/api/video/upload" })
 @MultipartConfig()
 public class Upload extends HttpServlet {
     @Override
@@ -70,12 +70,13 @@ public class Upload extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         String videoTitle = request.getParameter("title");
         String videoDescription = request.getParameter("description");
-        Timestamp videoDate = new Timestamp(System.currentTimeMillis());
+        String videoDate = Instant.now().toString();
 
-        VideoDTO videoDTO = new VideoDTO(videoId, videoTitle, videoDescription, videoDate);
+        VideoInformationDTO videoDTO = new VideoInformationDTO(videoId, videoTitle, videoDescription, videoDate);
 
         if (VideoDAO.addVideo(videoDTO, userId)) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"videoId\":\"" + videoId + "\"}");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

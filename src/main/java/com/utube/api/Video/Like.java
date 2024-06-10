@@ -17,13 +17,22 @@ public class Like extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int user_id = Integer.parseInt(request.getParameter("user_id"));
         String video_id = request.getParameter("video_id");
 
-        if (VideoDAO.like(user_id, video_id)) {
+        if (VideoDAO.isIdExist(video_id)) {
+            int user_id = Integer.parseInt(request.getParameter("user_id"));
+            boolean isDislike = VideoDAO.isDislike(user_id, video_id);
+
+            if (isDislike) {
+                VideoDAO.dislike(user_id, video_id);
+                VideoDAO.like(user_id, video_id);
+            } else {
+                VideoDAO.like(user_id, video_id);
+            }
+
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

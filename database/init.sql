@@ -62,6 +62,7 @@ CREATE TABLE Video_Like
 (
     user_id  INT          NOT NULL,
     video_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (user_id, video_id),
     FOREIGN KEY (user_id) REFERENCES User (user_id),
     FOREIGN KEY (video_id) REFERENCES Video (video_id)
 );
@@ -70,6 +71,7 @@ CREATE TABLE Video_Dislike
 (
     user_id  INT          NOT NULL,
     video_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (user_id, video_id),
     FOREIGN KEY (user_id) REFERENCES User (user_id),
     FOREIGN KEY (video_id) REFERENCES Video (video_id)
 );

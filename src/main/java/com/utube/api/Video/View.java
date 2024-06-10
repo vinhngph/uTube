@@ -11,26 +11,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/api/video/dislike")
+@WebServlet(urlPatterns = { "/api/video/view" })
 @MultipartConfig()
-public class Dislike extends HttpServlet {
+public class View extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String video_id = request.getParameter("video_id");
+        String videoId = request.getParameter("id");
 
-        if (VideoDAO.isIdExist(video_id)) {
-            int user_id = Integer.parseInt(request.getParameter("user_id"));
-            boolean isLike = VideoDAO.isLike(user_id, video_id);
-
-            if (isLike) {
-                VideoDAO.like(user_id, video_id);
-                VideoDAO.dislike(user_id, video_id);
+        if (VideoDAO.isIdExist(videoId)) {
+            if (VideoDAO.addView(videoId)) {
+                response.setStatus(HttpServletResponse.SC_OK);
             } else {
-                VideoDAO.dislike(user_id, video_id);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-
-            response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
