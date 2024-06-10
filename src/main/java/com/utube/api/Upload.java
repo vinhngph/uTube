@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 
 import com.utube.daos.VideoDAO;
 import com.utube.dtos.VideoDTO;
+import com.utube.utils.Config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -34,8 +35,13 @@ public class Upload extends HttpServlet {
         }
 
         // Prepare path for storage
-        String storagePath = request.getServletContext().getRealPath(File.separator + "storage");
-        // String storagePath = "/app/storage/";
+        String storagePath = null;
+        if (Config.getProperty("STORAGE_PATH") == null) {
+            storagePath = request.getServletContext().getRealPath(File.separator + "storage");
+        } else {
+            storagePath = Config.getProperty("STORAGE_PATH");
+        }
+
         Path storage = Paths.get(storagePath);
         if (!Files.exists(storage)) {
             Files.createDirectory(storage);
