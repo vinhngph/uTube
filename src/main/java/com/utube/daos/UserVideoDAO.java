@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
-import com.utube.dtos.VideoDTO;
+import com.utube.dtos.VideoCardDTO;
 import com.utube.utils.DBConnect;
 
 public class UserVideoDAO {
@@ -54,10 +54,10 @@ public class UserVideoDAO {
             ps.setInt(1, userId);
 
             ResultSet rs = ps.executeQuery();
-            ArrayList<VideoDTO> videos = new ArrayList<>();
+            ArrayList<VideoCardDTO> videos = new ArrayList<>();
 
             while (rs.next()) {
-                VideoDTO video = new VideoDTO(
+                VideoCardDTO video = new VideoCardDTO(
                         rs.getString("video_id"),
                         rs.getString("video_title"),
                         rs.getString("video_description"),

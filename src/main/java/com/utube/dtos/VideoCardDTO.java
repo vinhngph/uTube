@@ -2,33 +2,34 @@ package com.utube.dtos;
 
 import com.utube.utils.Config;
 
-public class VideoDTO {
+public class VideoCardDTO {
     private String videoId;
     private String videoTitle;
     private String videoDescription;
     private String videoDate;
     private boolean videoStatus;
     private String videoThumbnail;
-    private long videoLike;
-    private long videoDislike;
-    private long videoViews;
-    private String videoChannelName;
-    private int videoChannelId;
+    private int videoOwner;
 
-    public VideoDTO(String videoId, String videoTitle, String videoDescription, String videoDate, boolean videoStatus,
-            String videoThumbnail, long videoLike, long videoDislike, long videoViews, String videoChannelName,
-            int videoChannelId) {
+    public VideoCardDTO(String videoId, String videoTitle, String videoDescription, String videoDate, boolean videoStatus,
+            int videoOwner) {
+        this.videoId = videoId;
+        this.videoTitle = videoTitle;
+        this.videoDescription = videoDescription;
+        this.videoDate = videoDate;
+        this.videoStatus = videoStatus;
+        this.videoOwner = videoOwner;
+    }
+
+    public VideoCardDTO(String videoId, String videoTitle, String videoDescription, String videoDate, boolean videoStatus,
+            String videoThumbnail, int videoOwner) {
         this.videoId = videoId;
         this.videoTitle = videoTitle;
         this.videoDescription = videoDescription;
         this.videoDate = videoDate;
         this.videoStatus = videoStatus;
         this.videoThumbnail = Config.getProperty("SERVER_URL") + "/api/video/thumbnail?id=" + videoThumbnail;
-        this.videoLike = videoLike;
-        this.videoDislike = videoDislike;
-        this.videoViews = videoViews;
-        this.videoChannelName = videoChannelName;
-        this.videoChannelId = videoChannelId;
+        this.videoOwner = videoOwner;
     }
 
     public String getVideoId() {
@@ -79,43 +80,11 @@ public class VideoDTO {
         this.videoThumbnail = videoThumbnail;
     }
 
-    public long getVideoLike() {
-        return videoLike;
+    public int getVideoOwner() {
+        return videoOwner;
     }
 
-    public void setVideoLike(long videoLike) {
-        this.videoLike = videoLike;
-    }
-
-    public long getVideoDislike() {
-        return videoDislike;
-    }
-
-    public void setVideoDislike(long videoDislike) {
-        this.videoDislike = videoDislike;
-    }
-
-    public long getVideoViews() {
-        return videoViews;
-    }
-
-    public void setVideoViews(long videoViews) {
-        this.videoViews = videoViews;
-    }
-
-    public String getVideoChannelName() {
-        return videoChannelName;
-    }
-
-    public void setVideoChannelName(String videoChannelName) {
-        this.videoChannelName = videoChannelName;
-    }
-
-    public int getVideoChannelId() {
-        return videoChannelId;
-    }
-
-    public void setVideoChannelId(int videoChannelId) {
-        this.videoChannelId = videoChannelId;
+    public void setVideoOwner(int videoOwner) {
+        this.videoOwner = videoOwner;
     }
 }
