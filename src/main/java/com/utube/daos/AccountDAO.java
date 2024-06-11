@@ -237,4 +237,26 @@ public class AccountDAO {
             DBConnect.closeConnection(conn);
         }
     }
+
+    public static boolean isUser(int userId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT * FROM User WHERE user_id = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
 }

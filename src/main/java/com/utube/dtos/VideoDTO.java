@@ -1,20 +1,34 @@
 package com.utube.dtos;
 
-public class VideoInformationDTO {
+import com.utube.utils.Config;
+
+public class VideoDTO {
     private String videoId;
     private String videoTitle;
     private String videoDescription;
     private String videoDate;
     private boolean videoStatus;
+    private String videoThumbnail;
     private int videoOwner;
 
-    public VideoInformationDTO(String videoId, String videoTitle, String videoDescription, String videoDate,
-            boolean videoStatus, int videoOwner) {
+    public VideoDTO(String videoId, String videoTitle, String videoDescription, String videoDate, boolean videoStatus,
+            int videoOwner) {
         this.videoId = videoId;
         this.videoTitle = videoTitle;
         this.videoDescription = videoDescription;
         this.videoDate = videoDate;
         this.videoStatus = videoStatus;
+        this.videoOwner = videoOwner;
+    }
+
+    public VideoDTO(String videoId, String videoTitle, String videoDescription, String videoDate, boolean videoStatus,
+            String videoThumbnail, int videoOwner) {
+        this.videoId = videoId;
+        this.videoTitle = videoTitle;
+        this.videoDescription = videoDescription;
+        this.videoDate = videoDate;
+        this.videoStatus = videoStatus;
+        this.videoThumbnail = Config.getProperty("SERVER_URL") + "/api/video/thumbnail?id=" + videoThumbnail;
         this.videoOwner = videoOwner;
     }
 
@@ -56,6 +70,14 @@ public class VideoInformationDTO {
 
     public void setVideoStatus(boolean videoStatus) {
         this.videoStatus = videoStatus;
+    }
+
+    public String getVideoThumbnail() {
+        return videoThumbnail;
+    }
+
+    public void setVideoThumbnail(String videoThumbnail) {
+        this.videoThumbnail = videoThumbnail;
     }
 
     public int getVideoOwner() {

@@ -10,18 +10,21 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.utube.daos.AccountDAO;
 import com.utube.daos.VideoDAO;
 import com.utube.utils.Config;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = { "/api/video" })
-public class GetVideo extends HttpServlet {
-    private static final int DEFAULT_BUFFER_SIZE = 10240;
+@MultipartConfig()
+public class VideoMangement extends HttpServlet {
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,14 +39,14 @@ public class GetVideo extends HttpServlet {
         }
 
         if (VideoDAO.isIdExist(videoId)) {
-            String storagePath = null;
-            if (Config.getProperty("STORAGE_PATH") == null) {
-                storagePath = request.getServletContext().getRealPath(File.separator + "storage");
-            } else {
-                storagePath = Config.getProperty("STORAGE_PATH");
+            String storagePath = Config.getProperty("STORAGE_PATH");
+            if (storagePath == null) {
+                storagePath = request.getServletContext().getRealPath(File.separator +
+                        "storage");
             }
 
-            String videoPath = storagePath + File.separator + videoId + File.separator + videoId + ".webm";
+            String videoPath = storagePath + File.separator + videoId + File.separator +
+                    videoId + ".webm";
             Path videoFilePath = Paths.get(videoPath);
 
             if (!Files.exists(videoFilePath)) {
@@ -54,11 +57,9 @@ public class GetVideo extends HttpServlet {
 
             String range = request.getHeader("Range");
             if (range == null) {
-                // If there's no Range header, serve the entire video file.
                 range = "bytes=0-";
             }
 
-            // Extract the range values.
             long fileLength = Files.size(videoFilePath);
             long start = 0;
             long end = fileLength - 1;
@@ -66,30 +67,28 @@ public class GetVideo extends HttpServlet {
             Matcher matcher = Pattern.compile("bytes=(\\d*)-(\\d*)").matcher(range);
             if (matcher.matches()) {
                 String startGroup = matcher.group(1);
-                if (startGroup.length() > 0) {
+                if (!startGroup.isEmpty()) {
                     start = Long.parseLong(startGroup);
                 }
                 String endGroup = matcher.group(2);
-                if (endGroup.length() > 0) {
+                if (!endGroup.isEmpty()) {
                     end = Long.parseLong(endGroup);
                 }
             }
 
-            // Validate range
             if (start > end || start < 0 || end >= fileLength) {
                 response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
-                response.setHeader("Content-Range", "bytes */" + fileLength); // Required in 416.
+                response.setHeader("Content-Range", "bytes */" + fileLength);
                 return;
             }
 
-            // Set the response headers.
             response.setContentType("video/webm");
             response.setHeader("Accept-Ranges", "bytes");
-            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
+            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" +
+                    fileLength);
             response.setHeader("Content-Length", String.valueOf(end - start + 1));
             response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-            // Copy the requested range of the file to the response.
             try (InputStream input = Files.newInputStream(videoFilePath);
                     OutputStream output = response.getOutputStream()) {
                 input.skip(start);
@@ -105,6 +104,25 @@ public class GetVideo extends HttpServlet {
                         break;
                     }
                 }
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String videoId = request.getParameter("video_id");
+        boolean isExist = VideoDAO.isIdExist(videoId);
+
+        if (isExist) {
+            int userId = Integer.parseInt(request.getParameter("user_id"));
+            int userRole = AccountDAO.getRole(userId);
+            if (userRole == 2 || userRole == 1) {
+                VideoDAO.toggleStatus(videoId);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

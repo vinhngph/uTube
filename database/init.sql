@@ -55,7 +55,8 @@ CREATE TABLE Video
     video_id          VARCHAR(255) PRIMARY KEY,
     video_title       VARCHAR(255) NOT NULL,
     video_description VARCHAR(255) NOT NULL,
-    video_date        TIMESTAMP    NOT NULL
+    video_date        TIMESTAMP    NOT NULL,
+    video_status      BOOLEAN      NOT NULL
 );
 
 CREATE TABLE Video_Like
@@ -89,4 +90,15 @@ CREATE TABLE Upload
     user_id  INT NOT NULL,
     FOREIGN KEY (video_id) REFERENCES Video (video_id),
     FOREIGN KEY (user_id) REFERENCES User (user_id)
+);
+
+CREATE TABLE User_History
+(
+    user_id    INT          NOT NULL,
+    video_id   VARCHAR(255) NOT NULL,
+    track_date TIMESTAMP    NOT NULL,
+    track_time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (user_id, video_id),
+    FOREIGN KEY (user_id) REFERENCES User (user_id),
+    FOREIGN KEY (video_id) REFERENCES Video (video_id)
 );

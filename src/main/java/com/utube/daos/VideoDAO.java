@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+import com.google.gson.Gson;
 import com.utube.dtos.VideoInformationDTO;
 import com.utube.dtos.VideoInteractionDTO;
 import com.utube.utils.DBConnect;
@@ -45,7 +46,7 @@ public class VideoDAO {
         Connection conn = DBConnect.getConnection();
 
         try {
-            String addVideo = "INSERT INTO Video (video_id, video_title, video_description, video_date) VALUES (?, ?, ?, ?)";
+            String addVideo = "INSERT INTO Video (video_id, video_title, video_description, video_date, video_status) VALUES (?, ?, ?, ?, ?)";
             String addVideoUser = "INSERT INTO Upload (video_id, user_id) VALUES (?, ?)";
             String defaultView = "INSERT INTO Video_View (video_id, video_view) VALUES (?, ?)";
 
@@ -56,6 +57,7 @@ public class VideoDAO {
             ps.setString(2, video.getVideoTitle());
             ps.setString(3, video.getVideoDescription());
             ps.setTimestamp(4, Timestamp.from(video_date));
+            ps.setBoolean(5, false);
             ps.executeUpdate();
 
             ps = conn.prepareStatement(addVideoUser);
@@ -244,24 +246,77 @@ public class VideoDAO {
         }
     }
 
-    public static VideoInformationDTO getVideoInformation(String videoId) {
+    public static String getVideoInformation(String video_id) {
         Connection conn = DBConnect.getConnection();
+        Gson gson = new Gson();
 
         try {
-            String query = "SELECT video_id, video_title, video_description, video_date FROM Video WHERE video_id = ?";
+            String query = "SELECT \n" +
+                    "    v.video_id,\n" +
+                    "    v.video_title,\n" +
+                    "    v.video_description,\n" +
+                    "    v.video_date,\n" +
+                    "    v.video_status,\n" +
+                    "    u.user_id AS video_owner\n" +
+                    "FROM \n" +
+                    "    Video v\n" +
+                    "JOIN \n" +
+                    "    Upload u ON v.video_id = u.video_id\n" +
+                    "WHERE \n" +
+                    "    v.video_id = ?";
+
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, videoId);
+            ps.setString(1, video_id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new VideoInformationDTO(rs.getString("video_id"), rs.getString("video_title"),
-                        rs.getString("video_description"), rs.getTimestamp("video_date").toInstant().toString());
+                String videoId = rs.getString("video_id");
+                String videoTitle = rs.getString("video_title");
+                String videoDescription = rs.getString("video_description");
+                String videoDate = rs.getTimestamp("video_date").toInstant().toString();
+                boolean videoStatus = rs.getBoolean("video_status");
+                int videoOwner = rs.getInt("video_owner");
+
+                VideoInformationDTO video = new VideoInformationDTO(videoId, videoTitle, videoDescription, videoDate,
+                        videoStatus, videoOwner);
+
+                return gson.toJson(video);
             } else {
                 return null;
             }
         } catch (SQLException e) {
+            return gson.toJson(e.getMessage());
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static void toggleStatus(String videoId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String getStatus = "SELECT video_status FROM Video WHERE video_id = ?";
+            PreparedStatement ps = conn.prepareStatement(getStatus);
+            ps.setString(1, videoId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                boolean status = rs.getBoolean("video_status");
+
+                if (status) {
+                    String query = "UPDATE Video SET video_status = false WHERE video_id = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, videoId);
+                    ps.executeUpdate();
+                } else {
+                    String query = "UPDATE Video SET video_status = true WHERE video_id = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, videoId);
+                    ps.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         } finally {
             DBConnect.closeConnection(conn);
         }

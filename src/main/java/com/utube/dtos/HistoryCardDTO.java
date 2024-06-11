@@ -1,21 +1,25 @@
 package com.utube.dtos;
 
-public class VideoInformationDTO {
+public class HistoryCardDTO {
     private String videoId;
     private String videoTitle;
     private String videoDescription;
     private String videoDate;
     private boolean videoStatus;
-    private int videoOwner;
+    private String videoThumbnail;
+    private String trackDate;
+    private String trackTime;
 
-    public VideoInformationDTO(String videoId, String videoTitle, String videoDescription, String videoDate,
-            boolean videoStatus, int videoOwner) {
+    public HistoryCardDTO(String videoId, String videoTitle, String videoDescription, String videoDate,
+            boolean videoStatus, String videoThumbnail, String trackDate, String trackTime) {
         this.videoId = videoId;
         this.videoTitle = videoTitle;
         this.videoDescription = videoDescription;
         this.videoDate = videoDate;
         this.videoStatus = videoStatus;
-        this.videoOwner = videoOwner;
+        this.videoThumbnail = videoThumbnail;
+        this.trackDate = trackDate;
+        this.trackTime = trackTime;
     }
 
     public String getVideoId() {
@@ -58,11 +62,28 @@ public class VideoInformationDTO {
         this.videoStatus = videoStatus;
     }
 
-    public int getVideoOwner() {
-        return videoOwner;
+    public String getVideoThumbnail() {
+        return videoThumbnail;
     }
 
-    public void setVideoOwner(int videoOwner) {
-        this.videoOwner = videoOwner;
+    public void setVideoThumbnail(String videoThumbnail) {
+        this.videoThumbnail = videoThumbnail;
     }
+
+    public String getTrackDate() {
+        return trackDate;
+    }
+
+    public void setTrackDate(String trackDate) {
+        this.trackDate = trackDate;
+    }
+
+    public String getTrackTime() {
+        return trackTime;
+    }
+
+    public void setTrackTime(String trackTime) {
+        this.trackTime = trackTime;
+    }
+
 }

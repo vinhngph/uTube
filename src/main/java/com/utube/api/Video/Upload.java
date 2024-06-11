@@ -72,7 +72,7 @@ public class Upload extends HttpServlet {
         String videoDescription = request.getParameter("description");
         String videoDate = Instant.now().toString();
 
-        VideoInformationDTO videoDTO = new VideoInformationDTO(videoId, videoTitle, videoDescription, videoDate);
+        VideoInformationDTO videoDTO = new VideoInformationDTO(videoId, videoTitle, videoDescription, videoDate, false, userId);
 
         if (VideoDAO.addVideo(videoDTO, userId)) {
             response.setContentType("application/json");
