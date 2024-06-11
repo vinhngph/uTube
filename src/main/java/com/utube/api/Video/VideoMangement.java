@@ -82,11 +82,14 @@ public class VideoMangement extends HttpServlet {
                 return;
             }
 
+            String videoName = VideoDAO.getVideoName(videoId);
+
             response.setContentType("video/webm");
             response.setHeader("Accept-Ranges", "bytes");
             response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" +
                     fileLength);
             response.setHeader("Content-Length", String.valueOf(end - start + 1));
+            response.setHeader("Content-Disposition", "inline; filename=\"" + videoName + ".webm\"");
             response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
             try (InputStream input = Files.newInputStream(videoFilePath);

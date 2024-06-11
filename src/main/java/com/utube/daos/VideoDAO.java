@@ -321,4 +321,26 @@ public class VideoDAO {
             DBConnect.closeConnection(conn);
         }
     }
+
+    public static String getVideoName(String videoId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT video_title FROM Video WHERE video_id = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, videoId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("video_title");
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
 }
