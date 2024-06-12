@@ -19,6 +19,7 @@ const UploadVideo = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState('');
 
   useEffect(() => {
+    console.log('cookies', document.cookie);
     const cookies = document.cookie.split(';').reduce((acc, cookie) => {
       const [name, value] = cookie.split('=').map(c => c.trim());
       acc[name] = decodeURIComponent(value);

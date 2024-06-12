@@ -8,10 +8,13 @@ import more_icon from '../../assets/more.png';
 import notification_icon from '../../assets/notification.png';
 import profile_icon from '../../assets/jack.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { API } from '../../constants';
 
 const Navbar = ({ setSidebar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     const cookies = document.cookie.split(';').reduce((acc, cookie) => {
@@ -23,6 +26,19 @@ const Navbar = ({ setSidebar }) => {
       setUser(JSON.parse(cookies.user));
     }
   }, []);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const fetchSearchResults = async () => {
+        const response = await fetch(API + `/api/home/search?key=${searchQuery}`);
+        const data = await response.json();
+        setSearchResults(data);
+      };
+      fetchSearchResults();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
 
   const toggleDropdown = () => {
     setShowDropdown(prev => !prev);
@@ -44,7 +60,6 @@ const Navbar = ({ setSidebar }) => {
     navigate('/');
   };
 
-
   const handleLogout = () => {
     sessionStorage.clear();
     clearCookies();
@@ -63,6 +78,14 @@ const Navbar = ({ setSidebar }) => {
     navigate('/manage-channel');
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleResultClick = (key) => {
+    navigate(`/search?key=${key}`);
+  };
+
   return (
     <nav className='flex-div'>
       <div className='nav-left'>
@@ -74,9 +97,18 @@ const Navbar = ({ setSidebar }) => {
 
       <div className='nav-middle'>
         <div className='search-box'>
-          <input type='text' placeholder='Search' />
+          <input type='text' placeholder='Search' value={searchQuery} onChange={handleSearchChange} />
           <img src={search_icon} alt='Search' />
         </div>
+        {searchResults.length > 0 && (
+          <div className='search-results'>
+            {searchResults.map(video => (
+              <div key={video.id} onClick={() => handleResultClick(video.name)}>
+                <h1>{video.name}</h1>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className='nav-right'>

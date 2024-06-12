@@ -1,0 +1,16 @@
+.search-page {
+    padding: 20px;
+  }
+  
+  .results {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .result-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  

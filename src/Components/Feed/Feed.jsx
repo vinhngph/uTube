@@ -1,115 +1,41 @@
-import React from 'react'
-import './Feed.css'
-import thumbnail1 from '../../assets/thumbnail1.png'
-import thumbnail2 from '../../assets/thumbnail2.png'
-import thumbnail3 from '../../assets/thumbnail3.png'
-import thumbnail4 from '../../assets/thumbnail4.png'
-import thumbnail5 from '../../assets/thumbnail5.png'
-import thumbnail6 from '../../assets/thumbnail6.png'
-import thumbnail7 from '../../assets/thumbnail7.png'
-import thumbnail8 from '../../assets/thumbnail8.png'
+import React, { useEffect, useState } from 'react';
+import './Feed.css';
+import { useNavigate } from 'react-router-dom';
+import { API } from '../../constants';
 
 const Feed = () => {
+  const [videos, setVideos] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(API + '/api/home/videos')
+      .then(response => response.json())
+      .then(data => {
+        const videos = data;
+        setVideos(videos);
+      })
+      .catch(error => console.error('Error fetching videos:', error));
+  }, []);
+
+  const handleCardClick = (videoId) => {
+    navigate(`/watch/${videoId}`);
+  };
+
   return (
     <div className="feed">
-        <div className='card'>
-            <img src={thumbnail1} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
+      {videos.map(video => (
+        <div key={video.videoId} className="card" onClick={() => handleCardClick(video.videoId)}>
+          <img src={video.videoThumbnail} alt={video.videoTitle} className="thumbnail" />
+          <div className="video-info">
+            <h2 className="video-title">{video.videoTitle}</h2>
+            <p className="video-channel">{video.videoChannelName}</p>
+            <p className="video-views">{video.videoViews} views</p>
+            <p className="video-date">{new Date(video.videoDate).toLocaleDateString()}</p>
+          </div>
         </div>
-        <div className='card'>
-            <img src={thumbnail2} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail3} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail4} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail5} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail6} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail7} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail8} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail1} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail2} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail3} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail4} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail5} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail6} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail7} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
-        <div className='card'>
-            <img src={thumbnail8} alt="" />
-            <h2>Video 1</h2>
-            <h3>VHB</h3>
-            <p>15k views &bull; 2 days ago</p>
-        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default Feed
+export default Feed;
