@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.utube.daos.AccountDAO;
 import com.utube.daos.VideoDAO;
 import com.utube.utils.Config;
 
@@ -107,25 +106,6 @@ public class VideoMangement extends HttpServlet {
                         break;
                     }
                 }
-            }
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String videoId = request.getParameter("video_id");
-        boolean isExist = VideoDAO.isIdExist(videoId);
-
-        if (isExist) {
-            int userId = Integer.parseInt(request.getParameter("user_id"));
-            int userRole = AccountDAO.getRole(userId);
-            if (userRole == 2 || userRole == 1) {
-                VideoDAO.toggleStatus(videoId);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

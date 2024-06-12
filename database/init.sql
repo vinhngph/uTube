@@ -121,5 +121,5 @@ FROM Video v
      Upload u ON v.video_id = u.video_id
          JOIN
      User_Information ui ON u.user_id = ui.user_id
-WHERE video_title LIKE ?
+WHERE v.video_status = false
 ORDER BY vv.video_view DESC;
