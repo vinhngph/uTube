@@ -3,6 +3,7 @@ import { Typography, Button, Form, message, Input, Progress } from 'antd';
 import Dropzone from 'react-dropzone';
 import { PlusOutlined } from '@ant-design/icons';
 import './UploadVideo.css';
+import { API } from '../../constants';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -60,7 +61,7 @@ const UploadVideo = () => {
     formData.append('userId', userId);
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://175.41.183.124:4000/api/upload', true);
+    xhr.open('POST', API + '/api/video/upload', true);
 
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
@@ -73,13 +74,8 @@ const UploadVideo = () => {
         console.log(xhr.responseText);
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
-        if (response.success) {
-          message.success('Video uploaded successfully');
-          setUploadProgress(100);
-        } else {
-          message.error('Failed to upload video');
-          setUploadProgress(0);
-        }
+        message.success('Video uploaded successfully');
+        setUploadProgress(100);
       } else {
         message.error('Failed to upload video');
         setUploadProgress(0);

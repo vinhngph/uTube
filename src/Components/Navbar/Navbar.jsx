@@ -40,6 +40,11 @@ const Navbar = ({ setSidebar }) => {
     }
   };
 
+  const handleHome = () => {
+    navigate('/');
+  };
+
+
   const handleLogout = () => {
     sessionStorage.clear();
     clearCookies();
@@ -54,11 +59,17 @@ const Navbar = ({ setSidebar }) => {
     navigate('/manage-account');
   };
 
+  const handleManageChannel = () => {
+    navigate('/manage-channel');
+  };
+
   return (
     <nav className='flex-div'>
       <div className='nav-left'>
         <img className='menu-icon' onClick={() => setSidebar(prev => !prev)} src={menu_icon} alt='Menu' />
-        <img className='logo' src={logo} alt='Logo' />
+        <Link to="/" onClick={handleHome}>
+          <img className='logo' src={logo} alt='Logo' />
+        </Link>
       </div>
 
       <div className='nav-middle'>
@@ -79,7 +90,7 @@ const Navbar = ({ setSidebar }) => {
               {user ? (
                 <>
                   <p>Account Info</p>
-                  <p>Switch Account</p>
+                  <button onClick={handleManageChannel}>Manage Channel</button>
                   <button onClick={handleLogout}>Log Out</button>
                   {(user.role === 1 || user.role === 2) && <button onClick={handleManageAccount}>Manage Account</button>}
                 </>

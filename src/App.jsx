@@ -8,6 +8,7 @@ import Login from './Pages/Login/Login'
 import Register from './Pages/Register/Register'
 import UploadVideo from './Pages/UploadVideo/UploadVideo'
 import ManageAccount from './Pages/ManageAccount/ManageAccount';
+import ManageChannel from './Pages/ManangeChannel/ManageChannel';
 
 const App = () => {
   const location = useLocation();
@@ -26,7 +27,8 @@ const App = () => {
         <Route path='/' element={<Home sidebar={sidebar} />} />
         <Route path='/upload' element={<UploadVideo />} />
         <Route path='/manage-account' element={<ManageAccount />} />
-        <Route path='/video/:categoryId/:videoId' element={<Video />} />
+        <Route path='/manage-channel' element={<ManageChannel />} />
+        <Route path="/watch/:videoId" element={<Video />} />
       </Routes>
     </div>
   )

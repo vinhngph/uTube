@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API } from '../../constants';
 
 const Login = () => {
   const location = useLocation();
@@ -50,7 +51,7 @@ const Login = () => {
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await fetch('http://175.41.183.124:4000/login', {
+      const response = await fetch(API + '/login', {
         method: 'POST',
         body: formData,
         credentials: 'include', // Ensures cookies are included in the request

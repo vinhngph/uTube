@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { API } from '../../constants';
 
 const Register = () => {
   const location = useLocation();
@@ -34,7 +35,7 @@ const Register = () => {
 
   const checkUser = async () => {
     try {
-      const response = await fetch('http://175.41.183.124:4000/api/isUser', {
+      const response = await fetch(API + '/api/isUser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -65,7 +66,7 @@ const Register = () => {
         formDataToSend.append('password', formData.password);
         formDataToSend.append('fullName', formData.fullName);
         formDataToSend.append('dob', formData.dob);
-        const response = await fetch('http://175.41.183.124:4000/register', {
+        const response = await fetch(API + '/register', {
           method: 'POST',
           body: formDataToSend,
           credentials: 'include'
