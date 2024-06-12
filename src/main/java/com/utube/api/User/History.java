@@ -2,7 +2,10 @@ package com.utube.api.User;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.google.gson.Gson;
 import com.utube.daos.AccountDAO;
 import com.utube.daos.HistoryDAO;
 import com.utube.daos.VideoDAO;
@@ -67,47 +70,36 @@ public class History extends HttpServlet {
             return;
         }
 
-        HistoryDTO history = new HistoryDTO(userId, videoId, trackDate.toString(), trackTime);
-        String result = HistoryDAO.addHistory(history);
+        String result = HistoryDAO.getTrackTime(userId, videoId);
+
+        response.setContentType("application/json");
+
         if (result == null) {
-            response.setStatus(HttpServletResponse.SC_OK);
+            HistoryDTO history = new HistoryDTO(userId, videoId, trackDate.toString(), trackTime);
+
+            boolean addResult = HistoryDAO.addHistory(history);
+
+            Gson gson = new Gson();
+
+            if (addResult) {
+                Map<String, Double> trackTimeMap = new HashMap<>();
+                trackTimeMap.put("trackTime", Double.parseDouble("0.0"));
+
+                response.getWriter().write(gson.toJson(trackTimeMap));
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } else {
-            response.setContentType("application/json");
-            response.getWriter().write(result);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+            HistoryDTO history = new HistoryDTO(userId, videoId, trackDate.toString(), trackTime);
+            boolean updateResult = HistoryDAO.updateHistory(history);
 
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int userId = Integer.parseInt(request.getParameter("user_id"));
-        String videoId = request.getParameter("video_id");
-        String trackDate = Instant.now().toString();
-        String trackTime = request.getParameter("track_time"); // second
-
-        if (userId == 0 || videoId == null || trackTime == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        if (!VideoDAO.isIdExist(videoId)) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        if (!AccountDAO.isUser(userId)) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        HistoryDTO history = new HistoryDTO(userId, videoId, trackDate, trackTime);
-        boolean result = HistoryDAO.updateHistory(history);
-
-        if (result) {
-            response.setStatus(HttpServletResponse.SC_OK);
-        } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            if (updateResult) {
+                response.getWriter().write(result);
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

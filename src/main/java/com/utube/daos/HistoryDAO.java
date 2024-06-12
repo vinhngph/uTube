@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.utube.dtos.HistoryCardDTO;
@@ -15,7 +17,7 @@ import com.utube.utils.Config;
 import com.utube.utils.DBConnect;
 
 public class HistoryDAO {
-    public static String addHistory(HistoryDTO history) {
+    public static boolean addHistory(HistoryDTO history) {
         Connection conn = DBConnect.getConnection();
 
         try {
@@ -29,10 +31,9 @@ public class HistoryDAO {
 
             ps.executeUpdate();
 
-            return null;
+            return true;
         } catch (SQLException e) {
-            Gson gson = new Gson();
-            return gson.toJson(e.getMessage());
+            return false;
         } finally {
             DBConnect.closeConnection(conn);
         }
@@ -126,6 +127,32 @@ public class HistoryDAO {
             return true;
         } catch (SQLException e) {
             return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static String getTrackTime(int userId, String videoId) {
+        Connection conn = DBConnect.getConnection();
+        Gson gson = new Gson();
+
+        try {
+            String query = "SELECT track_time FROM User_History WHERE user_id = ? AND video_id = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, userId);
+            ps.setString(2, videoId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Map<String, Double> trackTime = new HashMap<>();
+                trackTime.put("trackTime", Double.parseDouble(rs.getString("track_time")));
+                return gson.toJson(trackTime);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
         } finally {
             DBConnect.closeConnection(conn);
         }
