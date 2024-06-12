@@ -42,6 +42,7 @@ public class HomeDAO {
                     "     Upload u ON v.video_id = u.video_id\n" +
                     "         JOIN\n" +
                     "     User_Information ui ON u.user_id = ui.user_id\n" +
+                    "WHERE v.video_status = true\n" +
                     "ORDER BY video_views DESC\n" +
                     "LIMIT 20";
 
@@ -131,7 +132,7 @@ public class HomeDAO {
                     "         JOIN\n" +
                     "     User_Information ui ON u.user_id = ui.user_id\n" +
                     "WHERE video_title LIKE ?\n" +
-                    "ORDER BY vv.video_view DESC";
+                    "ORDER BY video_views DESC";
 
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, "%" + keyWord + "%");
