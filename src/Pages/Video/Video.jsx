@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './Video.css';
@@ -12,8 +11,8 @@ const Video = () => {
   const [interaction, setInteraction] = useState({ views: 0, likes: 0, dislikes: 0 });
   const [error, setError] = useState('');
   const [trackTime, setTrackTime] = useState(0);
+  const trackTimeRef = useRef(trackTime);
 
-  
   // Adjust postUserHistory to accept trackTime as a parameter
   const postUserHistory = (trackTime) => {
     const userId = getUserIdFromCookie();
@@ -24,27 +23,28 @@ const Video = () => {
         console.error('Error updating user history:', error);
       });
   };
-  
 
   useEffect(() => {
     fetchVideoDetails();
     fetchVideoInfoAndOwner();
     handleView();
     fetchUserHistory();
-  
+
     const handleBeforeUnload = () => {
-      postUserHistory(trackTime);
+      postUserHistory(trackTimeRef.current);
     };
-  
+
     window.addEventListener('beforeunload', handleBeforeUnload);
-  
+
     return () => {
-      // Update user history with the last known track time
-      postUserHistory(trackTime);
+      postUserHistory(trackTimeRef.current);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [videoId]);
 
+  useEffect(() => {
+    trackTimeRef.current = trackTime;
+  }, [trackTime]);
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -163,7 +163,7 @@ const Video = () => {
     const userId = getUserIdFromCookie();
     if (!userId) return;
 
-    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: 0.0} })
+    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime} })
       .then(response => {
         if (response.data.trackTime > 0) {
           setTrackTime(response.data.trackTime);
@@ -209,8 +209,6 @@ const Video = () => {
           </div>
         </>
       )}
-   
-
     </div>
   );
 };
