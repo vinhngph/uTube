@@ -12,13 +12,18 @@ const Video = () => {
   const [error, setError] = useState('');
   const [trackTime, setTrackTime] = useState(0);
   const trackTimeRef = useRef(trackTime);
+  const videoRef = useRef(null);
 
-  // Adjust postUserHistory to accept trackTime as a parameter
   const postUserHistory = (trackTime) => {
     const userId = getUserIdFromCookie();
     if (!userId) return;
-  
+
     axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime } })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('User history updated successfully: ', response.data.trackTime);
+        }
+      })
       .catch(error => {
         console.error('Error updating user history:', error);
       });
@@ -32,6 +37,7 @@ const Video = () => {
 
     const handleBeforeUnload = () => {
       postUserHistory(trackTimeRef.current);
+      localStorage.setItem('trackTime', JSON.stringify(trackTimeRef.current));
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -45,6 +51,16 @@ const Video = () => {
   useEffect(() => {
     trackTimeRef.current = trackTime;
   }, [trackTime]);
+
+  useEffect(() => {
+    const savedTrackTime = JSON.parse(localStorage.getItem('trackTime'));
+    if (savedTrackTime) {
+      setTrackTime(savedTrackTime);
+      if (videoRef.current) {
+        videoRef.current.currentTime = savedTrackTime;
+      }
+    }
+  }, []);
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -163,10 +179,11 @@ const Video = () => {
     const userId = getUserIdFromCookie();
     if (!userId) return;
 
-    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime} })
-      .then(response => {
-        if (response.data.trackTime > 0) {
-          setTrackTime(response.data.trackTime);
+    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime } })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('User history updated successfully: ', response.data.trackTime);
+          videoRef.current.currentTime = response.data.trackTime;
         }
       })
       .catch(error => {
@@ -186,7 +203,7 @@ const Video = () => {
           <div className="video-layout">
             <div className="video-column">
               <div className="video-wrapper">
-                <video src={videoUrl} controls className="video-player" onTimeUpdate={handleTimeUpdate} />
+                <video ref={videoRef} src={videoUrl} controls className="video-player" onTimeUpdate={handleTimeUpdate} />
               </div>
             </div>
             <div className="info-column">
