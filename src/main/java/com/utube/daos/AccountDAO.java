@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.utube.dtos.SessionDTO;
 import com.utube.dtos.UserDTO;
 import com.utube.dtos.UserInformationDTO;
 import com.utube.utils.DBConnect;
@@ -255,6 +257,36 @@ public class AccountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static String getSessions(int userId) {
+        Connection conn = DBConnect.getConnection();
+        Gson gson = new Gson();
+
+        try {
+            String query = "SELECT * FROM Session WHERE session_user = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setInt(1, userId);
+
+            ResultSet rs = stm.executeQuery();
+            ArrayList<SessionDTO> sessions = new ArrayList<SessionDTO>();
+
+            while (rs.next()) {
+                int sessionId = rs.getInt("session_id");
+                int sessionUser = rs.getInt("session_user");
+                String sessionTime = rs.getTimestamp("session_time").toInstant().toString();
+                String sessionDevice = rs.getString("session_device");
+
+                SessionDTO session = new SessionDTO(sessionId, sessionUser, sessionTime, sessionDevice);
+                sessions.add(session);
+            }
+
+            return gson.toJson(sessions);
+        } catch (SQLException e) {
+            return null;
         } finally {
             DBConnect.closeConnection(conn);
         }

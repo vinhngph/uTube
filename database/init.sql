@@ -102,24 +102,3 @@ CREATE TABLE User_History
     FOREIGN KEY (user_id) REFERENCES User (user_id),
     FOREIGN KEY (video_id) REFERENCES Video (video_id)
 );
-
-SELECT v.video_id,
-       v.video_title,
-       v.video_description,
-       v.video_date,
-       v.video_status,
-       v.video_id                                                                               AS video_thumbnail,
-       CAST((SELECT COUNT(*) FROM Video_Like vl WHERE vl.video_id = v.video_id) AS UNSIGNED)    AS video_like,
-       CAST((SELECT COUNT(*) FROM Video_Dislike vd WHERE vd.video_id = v.video_id) AS UNSIGNED) AS video_dislike,
-       CAST(vv.video_view AS UNSIGNED)                                                          AS video_views,
-       ui.user_fullname                                                                         AS video_channel_name,
-       u.user_id                                                                                AS video_channel_id
-FROM Video v
-         JOIN
-     Video_View vv ON v.video_id = vv.video_id
-         JOIN
-     Upload u ON v.video_id = u.video_id
-         JOIN
-     User_Information ui ON u.user_id = ui.user_id
-WHERE v.video_status = false
-ORDER BY vv.video_view DESC;
