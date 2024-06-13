@@ -42,3 +42,5 @@ build/
 tomcat
 storage
 build
+
+.env

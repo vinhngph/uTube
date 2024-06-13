@@ -102,3 +102,11 @@ CREATE TABLE User_History
     FOREIGN KEY (user_id) REFERENCES User (user_id),
     FOREIGN KEY (video_id) REFERENCES Video (video_id)
 );
+
+CREATE TABLE Password_OTP
+(
+    user_id INT NOT NULL,
+    otp     INT NOT NULL,
+    PRIMARY KEY (user_id, otp),
+    FOREIGN KEY (user_id) REFERENCES User (user_id)
+);

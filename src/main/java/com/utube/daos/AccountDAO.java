@@ -6,12 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.google.gson.Gson;
 import com.utube.dtos.SessionDTO;
 import com.utube.dtos.UserDTO;
 import com.utube.dtos.UserInformationDTO;
 import com.utube.utils.DBConnect;
+import com.utube.utils.EmailService;
 
 public class AccountDAO {
     public static boolean registerUser(String email, String username, String password, String fullName, Date dob) {
@@ -287,6 +289,172 @@ public class AccountDAO {
             return gson.toJson(sessions);
         } catch (SQLException e) {
             return null;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    private static int isEmailExist(String email) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT user_id FROM User WHERE user_email = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setString(1, email);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            return -2;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    private static boolean isOTPExist(int userId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT otp FROM Password_OTP WHERE user_id = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setInt(1, userId);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    private static int generateOTP(int userId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            boolean isExist = isOTPExist(userId);
+
+            Random random = new Random();
+            int otp = random.nextInt(900000) + 100000;
+
+            if (isExist) {
+                String query = "UPDATE Password_OTP SET otp = ? WHERE user_id = ?";
+                PreparedStatement stm = conn.prepareStatement(query);
+                stm.setInt(1, otp);
+                stm.setInt(2, userId);
+
+                stm.executeUpdate();
+
+                return otp;
+            } else {
+                String query = "INSERT INTO Password_OTP (user_id, otp) VALUES (?, ?)";
+                PreparedStatement stm = conn.prepareStatement(query);
+
+                stm.setInt(1, userId);
+                stm.setInt(2, otp);
+
+                stm.executeUpdate();
+
+                return otp;
+            }
+        } catch (SQLException e) {
+            return -2;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static int sendOTPMail(String email) {
+        int userId = isEmailExist(email);
+
+        // -1: Email not exist
+        // -2: SQL Error
+
+        if (userId == -1) {
+            return -1;
+        } else if (userId == -2) {
+            return -2;
+        }
+
+        int otp = generateOTP(userId);
+        if (otp == -2) {
+            return -2;
+        }
+
+        String subject = "uTube - Reset Password OTP";
+        String body = "<p>Your OTP is: " + "<strong>" + otp + "</strong>" + "</p>" + "<br>"
+                + "<p>Do not share this OTP with anyone.</p>";
+        EmailService.sendEmail(email, subject, body);
+
+        return 0;
+    }
+
+    public static int verifyOTP(String email, int otp) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            int userId = isEmailExist(email);
+
+            // -1: Email not exist
+            // -2: SQL Error
+
+            if (userId == -1) {
+                return -1;
+            } else if (userId == -2) {
+                return -2;
+            }
+
+            String query = "SELECT otp FROM Password_OTP WHERE user_id = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setInt(1, userId);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int correctOTP = rs.getInt("otp");
+
+                if (correctOTP == otp) {
+                    String deleteQuery = "DELETE FROM Password_OTP WHERE user_id = ?";
+                    stm = conn.prepareStatement(deleteQuery);
+                    stm.setInt(1, userId);
+                    stm.executeUpdate();
+
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            return -2;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean updatePassword(String email, String newPassword) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "UPDATE User SET user_password = ? WHERE user_email = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setString(1, newPassword);
+            stm.setString(2, email);
+
+            stm.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            return false;
         } finally {
             DBConnect.closeConnection(conn);
         }
