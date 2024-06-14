@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import './Video.css';
 import { API } from '../../constants';
+import { message } from 'antd';
 
 const Video = () => {
   const { videoId } = useParams();
@@ -10,57 +11,42 @@ const Video = () => {
   const [videoInfo, setVideoInfo] = useState({ title: '', description: '', date: '', owner: '' });
   const [interaction, setInteraction] = useState({ views: 0, likes: 0, dislikes: 0 });
   const [error, setError] = useState('');
-  const [trackTime, setTrackTime] = useState(0);
-  const trackTimeRef = useRef(trackTime);
   const videoRef = useRef(null);
-
-  const postUserHistory = (trackTime) => {
-    const userId = getUserIdFromCookie();
-    if (!userId) return;
-
-    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime } })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('User history updated successfully: ', response.data.trackTime);
-        }
-      })
-      .catch(error => {
-        console.error('Error updating user history:', error);
-      });
-  };
+  const location = useLocation();
 
   useEffect(() => {
     fetchVideoDetails();
     fetchVideoInfoAndOwner();
     handleView();
-    fetchUserHistory();
 
-    const handleBeforeUnload = () => {
-      postUserHistory(trackTimeRef.current);
-      localStorage.setItem('trackTime', JSON.stringify(trackTimeRef.current));
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    const video = document.querySelector('video');
+    postHistory(video.currentTime);
 
     return () => {
-      postUserHistory(trackTimeRef.current);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [videoId]);
-
-  useEffect(() => {
-    trackTimeRef.current = trackTime;
-  }, [trackTime]);
-
-  useEffect(() => {
-    const savedTrackTime = JSON.parse(localStorage.getItem('trackTime'));
-    if (savedTrackTime) {
-      setTrackTime(savedTrackTime);
-      if (videoRef.current) {
-        videoRef.current.currentTime = savedTrackTime;
-      }
+      postHistory(video.currentTime);
     }
-  }, []);
+
+  }, [videoId, location]);
+
+  const postHistory = (trackTime) => {
+    const userId = getUserIdFromCookie();
+
+    if (!userId) {
+      return;
+    }
+
+    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime } })
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data.trackTime > 0) {
+            videoRef.current.currentTime = response.data.trackTime;
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error updating user history:', error);
+      });
+  }
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -175,26 +161,6 @@ const Video = () => {
       });
   };
 
-  const fetchUserHistory = () => {
-    const userId = getUserIdFromCookie();
-    if (!userId) return;
-
-    axios.post(API + '/api/user/history', null, { params: { user_id: userId, video_id: videoId, track_time: trackTime } })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('User history updated successfully: ', response.data.trackTime);
-          videoRef.current.currentTime = response.data.trackTime;
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching user history:', error);
-      });
-  };
-
-  const handleTimeUpdate = (event) => {
-    setTrackTime(event.target.currentTime);
-  };
-
   return (
     <div className="video-container">
       {error && <p className="error">{error}</p>}
@@ -203,7 +169,7 @@ const Video = () => {
           <div className="video-layout">
             <div className="video-column">
               <div className="video-wrapper">
-                <video ref={videoRef} src={videoUrl} controls className="video-player" onTimeUpdate={handleTimeUpdate} />
+                <video ref={videoRef} src={videoUrl} controls className="video-player" autoPlay/>
               </div>
             </div>
             <div className="info-column">

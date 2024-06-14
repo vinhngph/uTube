@@ -1,0 +1,86 @@
+/* AdminPage.css */
+
+.react-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .react-modal-content {
+    width: 80%;
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    outline: none;
+  }
+  
+  .admin-page {
+    padding: 20px;
+  }
+  
+  .video-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .video-item {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .video-item img {
+    cursor: pointer;
+    width: 120px;
+    height: 90px;
+  }
+  
+  .video-details {
+    margin-left: 20px;
+  }
+  
+  .video-title {
+    margin: 0;
+    font-size: 1.2em;
+  }
+  
+  .video-description,
+  .video-meta,
+  .video-owner {
+    margin: 5px 0;
+  }
+  
+  .button-group {
+    margin-top: 10px;
+  }
+  
+  .button-accept,
+  .button-delete {
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .button-accept {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .button-delete {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  

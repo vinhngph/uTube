@@ -182,6 +182,7 @@ const ManageAccount = () => {
     };
 
     return (
+        <>
         <div className='manage-account'>
             {loading ? (
                 <p>Loading...</p>
@@ -237,6 +238,8 @@ const ManageAccount = () => {
                 </>
             )}
         </div>
+        </>
+        
     );
 };
 

@@ -66,6 +66,7 @@ const ManageChannel = () => {
   }, [userId]);
 
   return (
+    <>
     <div className="manage-channel">
       <h1>Manage Channel</h1>
       {error ? (
@@ -89,6 +90,8 @@ const ManageChannel = () => {
         <p>No videos found.</p>
       )}
     </div>
+    </>
+    
   );
 };
 

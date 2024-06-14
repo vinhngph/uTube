@@ -11,6 +11,7 @@ import ManageAccount from './Pages/ManageAccount/ManageAccount';
 import ManageChannel from './Pages/ManangeChannel/ManageChannel';
 import Search from './Components/Search/Search';
 import History from './Pages/History/History';
+import AdminPage from './Pages/AdminPage/AdminPage';
 
 const App = () => {
   const location = useLocation();
@@ -28,11 +29,12 @@ const App = () => {
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Home sidebar={sidebar} />} />
         <Route path='/upload' element={<UploadVideo />} />
-        <Route path='/manage-account' element={<ManageAccount />} />
-        <Route path='/manage-channel' element={<ManageChannel />} />
-        <Route path="/watch/:videoId" element={<Video />} />
+        <Route path='/admin-page' element={<AdminPage />} />
+        <Route path='/manage-account' element={<ManageAccount sidebar={sidebar} />} />
+        <Route path='/manage-channel' element={<ManageChannel sidebar={sidebar} />} />
+        <Route path="/watch/:videoId" element={<Video sidebar={sidebar} />} />
         <Route path='/result/:videoTitle' element={< Search/>} />
-        <Route path='/feed/history' element={< History/>} />
+        <Route path='/feed/history' element={< History sidebar={sidebar}/>} />
       </Routes>
     </div>
   )

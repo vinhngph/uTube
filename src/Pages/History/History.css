@@ -1,0 +1,82 @@
+.history-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  .history-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .video-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .video-card {
+    width: calc(33.33% - 20px); /* Adjust width as needed for responsiveness */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .thumbnail-container {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .thumbnail-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .card-body {
+    padding: 10px;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .card-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .card-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+  .views {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .timestamp {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .delete-button {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #ff7875;
+  }
+  

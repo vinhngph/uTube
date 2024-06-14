@@ -78,6 +78,10 @@ const Navbar = ({ setSidebar }) => {
     navigate('/manage-channel');
   };
 
+  const handleAdminPage = () => {
+    navigate('/admin-page');
+  };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -125,6 +129,7 @@ const Navbar = ({ setSidebar }) => {
                   <button onClick={handleManageChannel}>Manage Channel</button>
                   <button onClick={handleLogout}>Log Out</button>
                   {(user.role === 1 || user.role === 2) && <button onClick={handleManageAccount}>Manage Account</button>}
+                  {(user.role === 1 || user.role === 2) && <button onClick={handleAdminPage}>Censor</button>}
                 </>
               ) : (
                 <>
