@@ -137,7 +137,7 @@ const AdminPage = () => {
           <p>Owner: {selectedVideo.videoOwner}</p>
           <p>Status: {selectedVideo.videoStatus ? 'Accepted' : 'Pending'}</p>
           <video width="100%" controls>
-            <source src={API + `/api/video?id=${selectedVideo.videoId}`} type="video/mp4" />
+            <source src={API + `/api/video?id=${selectedVideo.videoId}`} type="video/webm" />
             Your browser does not support the video tag.
           </video>
           <div className="button-group">

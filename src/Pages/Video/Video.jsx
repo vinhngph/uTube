@@ -15,7 +15,6 @@ const Video = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetchVideoDetails();
     fetchVideoInfoAndOwner();
     handleView();
 
@@ -40,6 +39,7 @@ const Video = () => {
         if (response.status === 200) {
           if (response.data.trackTime > 0) {
             videoRef.current.currentTime = response.data.trackTime;
+            videoRef.current.play();
           }
         }
       })
@@ -67,18 +67,6 @@ const Video = () => {
       }
     }
     return null;
-  };
-
-  const fetchVideoDetails = () => {
-    axios.get(API + `/api/video`, { params: { id: videoId } })
-      .then(response => {
-        setVideoUrl(API + `/api/video?id=${videoId}`);
-        setError('');
-      })
-      .catch(error => {
-        setError('Error fetching video. Please try again later.');
-        console.error('Error fetching video:', error);
-      });
   };
 
   const fetchVideoInfoAndOwner = () => {
@@ -169,7 +157,9 @@ const Video = () => {
           <div className="video-layout">
             <div className="video-column">
               <div className="video-wrapper">
-                <video ref={videoRef} src={videoUrl} controls className="video-player" autoPlay/>
+                <video ref={videoRef}  controls className="video-player" autoPlay>
+                <source src={API + `/api/video?id=${videoId}`} type="video/webm"/>
+                </video>
               </div>
             </div>
             <div className="info-column">

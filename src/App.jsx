@@ -13,6 +13,7 @@ import Search from './Components/Search/Search';
 import History from './Pages/History/History';
 import AdminPage from './Pages/AdminPage/AdminPage';
 import AccountInfo from './Pages/AccountInfo/AccountInfo';
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 
 const App = () => {
   const location = useLocation();
@@ -21,13 +22,15 @@ const App = () => {
   // Check if current route is '/login'
   const isLoginPage = location.pathname === '/login';
   const isRegisterPage = location.pathname === '/register';
+  const isForgotPasswordPage = location.pathname === '/forgot-password';
   return (
     <div>
       {/* Render Navbar only if not on the login or register page */}
-      {!isLoginPage && !isRegisterPage && <Navbar setSidebar={setSidebar} />}
+      {!isLoginPage && !isRegisterPage && !isForgotPasswordPage &&<Navbar setSidebar={setSidebar} />}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/forgot-password' element={<ForgotPassword/>}/>
         <Route path='/' element={<Home sidebar={sidebar} />} />
         <Route path='/upload' element={<UploadVideo />} />
         <Route path='/account-info' element={<AccountInfo />} />
