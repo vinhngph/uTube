@@ -82,6 +82,10 @@ const Navbar = ({ setSidebar }) => {
     navigate('/admin-page');
   };
 
+  const handleInformation = () => {
+    navigate('/account-info');
+  };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -125,7 +129,7 @@ const Navbar = ({ setSidebar }) => {
             <div className='dropdown-content'>
               {user ? (
                 <>
-                  <p>Account Info</p>
+                  <button onClick={handleInformation}>Account Information</button>
                   <button onClick={handleManageChannel}>Manage Channel</button>
                   <button onClick={handleLogout}>Log Out</button>
                   {(user.role === 1 || user.role === 2) && <button onClick={handleManageAccount}>Manage Account</button>}
