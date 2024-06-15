@@ -1,11 +1,13 @@
 :root {
-    --primary-color: #ff0000;
-    --background-color: #ffffff;
-    --text-color: #000000;
-    --secondary-text-color: #606060;
-    --border-color: #e5e5e5;
-    --dropdown-bg-color: #ffffff;
+    --primary-color: #ff0000; /* Red */
+    --background-color: #ffffff; /* White */
+    --text-color: #000000; /* Black */
+    --secondary-text-color: #606060; /* Dark grey */
+    --border-color: #e5e5e5; /* Light grey border */
+    --dropdown-bg-color: #ffffff; /* White */
+    --hover-color: #f0f0f0; /* Light grey for hover effect */
 }
+
 
 body {
     margin: 0;

@@ -1,50 +1,41 @@
-.sidebar{
-    background: #fff;
-    width: 15%;
+.sidebar {
     height: 100vh;
     position: fixed;
     top: 0;
-    padding-left: 2%;
+    background: #fff;
     padding-top: 80px;
-}
-.shortcut-links img{
-    width: 20px;
-    margin-right: 20px;
-}
-.side-link{
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    width: fit-content;
-    flex-wrap: wrap;
-    cursor: pointer;
-}
-.sidebar hr{
-    border: 0;
-    height: 1px;
-    background: #ccc;
-    width: 85%;
-}
-.subscribed-list h3{
-    font-size: 13px;
-    margin: 20px 0;
-    color: #5a5a5a;
-}
-.subscribed-list img{
-    width: 25px;
-    border-radius: 50%;
-    margin-right: 20px;
-}
-.small-sidebar{
-    width: 5%;
-}
-.small-sidebar p{
-    display: none;
-}
-.small-sidebar h3{
-    display: none;
-}
-.small-sidebar hr{
-    width: 50%;
-    margin-bottom: 25px;
-}
+  }
+  
+  .ant-layout-sider {
+    background: #fff; /* Set background to white */
+  }
+  
+  .ant-menu-light .ant-menu-item-selected {
+    background-color: #ff0000 !important; /* YouTube red for selected item */
+    color: #fff !important; /* White text for selected item */
+  }
+  
+  .ant-menu-item {
+    font-size: 16px;
+    color: #000; /* Black text color */
+  }
+  
+  .ant-menu-item:hover {
+    background-color: #ff0000 !important; /* Red background on hover */
+    color: #fff !important; /* White text on hover */
+  }
+  
+  .ant-menu-light .ant-menu-item-selected:hover {
+    background-color: #ff0000 !important; /* Keep the red background on hover when selected */
+  }
+  
+  .anticon {
+    font-size: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100% !important;
+    }
+  }
+  

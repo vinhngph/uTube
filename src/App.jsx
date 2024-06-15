@@ -30,6 +30,7 @@ const App = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+
         <Route path='/forgot-password' element={<ForgotPassword/>}/>
         <Route path='/' element={<Home sidebar={sidebar} />} />
         <Route path='/upload' element={<UploadVideo />} />
@@ -38,7 +39,7 @@ const App = () => {
         <Route path='/manage-account' element={<ManageAccount sidebar={sidebar} />} />
         <Route path='/manage-channel' element={<ManageChannel sidebar={sidebar} />} />
         <Route path="/watch/:videoId" element={<Video sidebar={sidebar} />} />
-        <Route path='/result/:videoTitle' element={< Search/>} />
+        <Route path="/search" element={<Search />} />
         <Route path='/feed/history' element={< History sidebar={sidebar}/>} />
       </Routes>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 import menu_icon from '../../assets/menu.png';
 import logo from '../../assets/logo.png';
@@ -11,10 +11,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { API } from '../../constants';
 
 const Navbar = ({ setSidebar }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const userDropdownRef = useRef(null);
+  const searchResultsRef = useRef(null);
 
   useEffect(() => {
     const cookies = document.cookie.split(';').reduce((acc, cookie) => {
@@ -30,18 +33,34 @@ const Navbar = ({ setSidebar }) => {
   useEffect(() => {
     if (searchQuery) {
       const fetchSearchResults = async () => {
-        const response = await fetch(API + `/api/home/search?key=${searchQuery}`);
-        const data = await response.json();
-        setSearchResults(data);
+        try {
+          const response = await fetch(API + `/api/home/search?key=${searchQuery}`);
+          const data = await response.json();
+          setSearchResults(data);
+          setShowSearchResults(true);
+        } catch (error) {
+          console.error('Error fetching search results:', error);
+          setSearchResults([]);
+          setShowSearchResults(false);
+        }
       };
       fetchSearchResults();
     } else {
       setSearchResults([]);
+      setShowSearchResults(false);
     }
   }, [searchQuery]);
 
-  const toggleDropdown = () => {
-    setShowDropdown(prev => !prev);
+  const toggleUserDropdown = () => {
+    setShowUserDropdown(prev => !prev);
+  };
+
+  const closeUserDropdown = () => {
+    setShowUserDropdown(false);
+  };
+
+  const closeSearchResults = () => {
+    setShowSearchResults(false);
   };
 
   const navigate = useNavigate();
@@ -58,32 +77,46 @@ const Navbar = ({ setSidebar }) => {
 
   const handleHome = () => {
     navigate('/');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleLogout = () => {
     sessionStorage.clear();
     clearCookies();
     navigate('/login');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleUploadClick = () => {
     navigate('/upload');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleManageAccount = () => {
     navigate('/manage-account');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleManageChannel = () => {
     navigate('/manage-channel');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleAdminPage = () => {
     navigate('/admin-page');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleInformation = () => {
     navigate('/account-info');
+    closeUserDropdown();
+    closeSearchResults();
   };
 
   const handleSearchChange = (e) => {
@@ -92,7 +125,38 @@ const Navbar = ({ setSidebar }) => {
 
   const handleResultClick = (key) => {
     navigate(`/search?key=${key}`);
+    setShowSearchResults(false); // Close search results dropdown after clicking a result
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchIconClick();
+    }
+  };
+
+  const handleSearchIconClick = () => {
+    if (searchQuery.trim() !== '') {
+      navigate(`/search?key=${encodeURIComponent(searchQuery.trim())}`);
+      setShowSearchResults(false); // Close search results dropdown on search icon click
+    }
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setShowUserDropdown(false);
+      }
+      if (searchResultsRef.current && !searchResultsRef.current.contains(e.target)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className='flex-div'>
@@ -105,27 +169,38 @@ const Navbar = ({ setSidebar }) => {
 
       <div className='nav-middle'>
         <div className='search-box'>
-          <input type='text' placeholder='Search' value={searchQuery} onChange={handleSearchChange} />
-          <img src={search_icon} alt='Search' />
+          <input 
+            type='text' 
+            placeholder='Search' 
+            value={searchQuery} 
+            onChange={handleSearchChange} 
+            onKeyPress={handleKeyPress} // Added to handle Enter key press
+          />
+          <img
+            src={search_icon}
+            alt='Search'
+            onClick={handleSearchIconClick}
+            style={{ cursor: 'pointer' }}
+          />
+          {showSearchResults && (
+            <div ref={searchResultsRef} className='search-results'>
+              {searchResults.map(video => (
+                <div key={video.id} onClick={() => handleResultClick(video.name)}>
+                  <h1>{video.name}</h1>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        {searchResults.length > 0 && (
-          <div className='search-results'>
-            {searchResults.map(video => (
-              <div key={video.id} onClick={() => handleResultClick(video.name)}>
-                <h1>{video.name}</h1>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       <div className='nav-right'>
         <img src={upload_icon} alt='Upload' onClick={handleUploadClick} />
         <img src={more_icon} alt='More' />
         <img src={notification_icon} alt='Notifications' />
-        <div className='user-dropdown' onClick={toggleDropdown}>
+        <div className='user-dropdown' ref={userDropdownRef} onClick={toggleUserDropdown}>
           <img className='user-icon' src={profile_icon} alt='Profile' />
-          {showDropdown && (
+          {showUserDropdown && (
             <div className='dropdown-content'>
               {user ? (
                 <>

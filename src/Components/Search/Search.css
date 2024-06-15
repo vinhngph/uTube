@@ -1,16 +1,42 @@
 .search-page {
-    padding: 20px;
-  }
-  
-  .results {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .result-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  
+  padding: 20px;
+}
+
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.thumbnail-container {
+  display: block;
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+}
+
+.card-body {
+  padding: 12px;
+}
+
+.card-title {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.card-text {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 8px;
+}
+
+.card-details {
+  color: rgba(0, 0, 0, 0.45);
+}
