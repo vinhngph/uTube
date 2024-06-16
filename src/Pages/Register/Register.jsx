@@ -122,7 +122,7 @@ const Register = () => {
             <Form onFinish={handleSubmit}>
               {step === 1 && (
                 <div id="step1">
-                  <h2>Step 1: Account Information</h2>
+                  <h2>Account Information</h2>
                   <Form.Item
                     label="Email:"
                     validateStatus={emailStatus === 'exists' ? 'error' : emailStatus === 'available' ? 'success' : ''}
@@ -190,7 +190,7 @@ const Register = () => {
 
               {step === 2 && (
                 <div id="step2">
-                  <h2>Step 2: Personal Information</h2>
+                  <h2>Personal Information</h2>
                   <Form.Item label="Full Name:">
                     <Input
                       type="text"

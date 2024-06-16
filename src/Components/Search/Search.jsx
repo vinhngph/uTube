@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { API } from '../../constants';
 import { Link } from 'react-router-dom';
-import { Typography, Row, Col, Card, Empty } from 'antd';
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
+import { Typography, Card, Empty } from 'antd';
 import './Search.css';
 
 const { Title, Paragraph } = Typography;
 
-const Search = () => {
+const Search = ({ sidebar }) => {
   const [videos, setVideos] = useState([]);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -20,11 +23,14 @@ const Search = () => {
   }, [key]);
 
   const fetchSearchResults = async () => {
+    setLoading(true); // Set loading state when fetching data
+
     try {
       if (key) {
         const encodedKey = encodeURIComponent(key);
-        const response = await fetch(API + `/api/home/search/results?key=${encodedKey}`);
-        const data = await response.json();
+        const response = await axios.get(API + `/api/home/search/results?key=${encodedKey}`);
+        const data = response.data;
+
         if (data.length > 0) {
           setVideos(data);
           setMessage('');
@@ -32,43 +38,53 @@ const Search = () => {
           setMessage('No search results found.');
           setVideos([]);
         }
+      } else {
+        setMessage('No search query specified.');
+        setVideos([]);
       }
     } catch (error) {
       setMessage('An error occurred while fetching the search results.');
       setVideos([]);
+    } finally {
+      setLoading(false); // Always set loading state to false after fetching
     }
   };
 
   return (
-    <div className='search-page'>
-      <Title level={2}>Search Results for "{key || ''}"</Title>
-      {message ? (
-        <Paragraph>{message}</Paragraph>
-      ) : (
-        <div className='video-list'>
-          {videos.length > 0 ? (
-            videos.map((video) => (
-              <Card key={video.videoId} className="video-card" hoverable>
-                <Link to={`/watch/${video.videoId}`} className="thumbnail-container">
-                  <img alt={video.videoTitle} src={video.videoThumbnail} className="card-img-top" />
-                </Link>
-                <div className="card-body">
-                  <Link to={`/watch/${video.videoId}`}>
-                    <h5 className="card-title">{video.videoTitle}</h5>
+    <>
+      <Sidebar sidebar={sidebar} />
+      <div className={`search-page ${sidebar ? '' : 'large-container'}`}>
+        <Title level={2}>Search Results for "{key || ''}"</Title>
+        {loading ? (
+          <div className="loader"></div>
+        ) : message ? (
+          <Paragraph>{message}</Paragraph>
+        ) : (
+          <div className='video-list'>
+            {videos.length > 0 ? (
+              videos.map((video) => (
+                <Card key={video.videoId} className="video-card" hoverable>
+                  <Link to={`/watch/${video.videoId}`} className="thumbnail-container">
+                    <img alt={video.videoTitle} src={video.videoThumbnail} className="card-img-top" />
                   </Link>
-                  <p className="card-text">{video.videoDescription}</p>
-                  <div className="card-details">
-                    <span className="views">{video.views} views</span>
+                  <div className="card-body">
+                    <Link to={`/watch/${video.videoId}`}>
+                      <h5 className="card-title">{video.videoTitle}</h5>
+                    </Link>
+                    <p className="card-text">{video.videoDescription}</p>
+                    <div className="card-details">
+                      <span className="views">{video.views} views</span>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))
-          ) : (
-            <Empty description="No search results found." />
-          )}
-        </div>
-      )}
-    </div>
+                </Card>
+              ))
+            ) : (
+              <Empty description="No search results found." />
+            )}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

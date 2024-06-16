@@ -40,7 +40,7 @@ const ManageAccount = () => {
         const fetchAccounts = async () => {
             try {
                 const userResponse = await axios.get(API + '/api/accounts/users');
-                const staffResponse = await axios.get(API + '/api/accounts/staffs');
+                const staffResponse = await axios.get(API + '/api/accounts/admins');
                 setUsers(userResponse.data);
                 setStaffs(staffResponse.data);
             } catch (error) {
@@ -56,7 +56,7 @@ const ManageAccount = () => {
 
     const handleUpdate = async (modifyUserId, modifyRole) => {
         try {
-            await axios.put(API + '/api/accounts', null, {
+            await axios.put(API + '/api/admin/accounts', null, {
                 params: {
                     current_user_id: userId,
                     modify_user_id: modifyUserId,
@@ -95,7 +95,7 @@ const ManageAccount = () => {
 
     const handleDelete = async (deleteUserId) => {
         try {
-            await axios.delete(API + '/api/accounts', {
+            await axios.delete(API + '/api/admin/accounts', {
                 params: {
                     current_user_id: userId,
                     delete_user_id: deleteUserId

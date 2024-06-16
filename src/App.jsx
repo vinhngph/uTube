@@ -33,13 +33,13 @@ const App = () => {
 
         <Route path='/forgot-password' element={<ForgotPassword/>}/>
         <Route path='/' element={<Home sidebar={sidebar} />} />
-        <Route path='/upload' element={<UploadVideo />} />
-        <Route path='/account-info' element={<AccountInfo />} />
-        <Route path='/admin-page' element={< AdminPage />} />
+        <Route path='/upload' element={<UploadVideo sidebar={sidebar} />} />
+        <Route path='/account-info' element={<AccountInfo sidebar={sidebar} />} />
+        <Route path='/admin-page' element={< AdminPage sidebar={sidebar}/>} />
         <Route path='/manage-account' element={<ManageAccount sidebar={sidebar} />} />
         <Route path='/manage-channel' element={<ManageChannel sidebar={sidebar} />} />
         <Route path="/watch/:videoId" element={<Video sidebar={sidebar} />} />
-        <Route path="/search" element={<Search />} />
+        <Route path="/search" element={<Search sidebar={sidebar} />} />
         <Route path='/feed/history' element={< History sidebar={sidebar}/>} />
       </Routes>
     </div>

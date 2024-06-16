@@ -1,111 +1,110 @@
 /* Background image for login page */
 .login-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-image: url('../../assets/background_login.jpg');
-  }
-  :where(.css-dev-only-do-not-override-zg0ahe).ant-form {
-    color: #fff;
-  }
-  :where(.css-dev-only-do-not-override-zg0ahe).ant-form-item .ant-form-item-label >label {
-    color: #fff;
-  }
-  
-  /* Container for the form */
-  .wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 400px;
-    padding: 30px 40px;
-    border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    color: #fff;
-    text-align: center;
-  }
-  
-  /* Title style */
-  .wrapper h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-image: url('../../assets/background_login.jpg');
+}
 
-  .wrapper button{
-    border-radius: 5px;
-  }
-  
-  /* Input field styles */
-  .wrapper .ant-input,
-  .wrapper .ant-input-password {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
-    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
-  }
-  
-  .wrapper .ant-input:focus,
-  .wrapper .ant-input-password:focus {
-    border-color: #fff;
-  }
-  
-  /* Placeholder text color */
-  .wrapper .ant-input::placeholder,
-  .wrapper .wrapper .ant-input-password::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
-  
-  /* Custom input text colors */
-  .input-black {
-    color: #000 !important;
-  }
-  
-  .input-white {
-    color: #fff !important;
-  }
-  
-  /* Input validation states */
-  .ant-input-success {
-    border-color: #52c41a !important;
-  }
-  
-  .ant-input-error {
-    border-color: #ff4d4f !important;
-  }
-  
-  /* Error message color */
-  .ant-form-item-explain-error {
-    color: #ff4d4f;
-  }
-  
-  /* Suffix text color */
-  .input-suffix {
-    color: #fff;
-  }
-  
-  /* Adjust label color */
-  .ant-form-item-label {
-    color: #fff !important;
-  }
-  
-  .ant-form-item-control-input {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-  }
-  
-  /* Custom button styles */
-  .custom-button-item {
-    margin-top: 20px;
-  }
-  
-  /* General adjustments */
-  .ant-picker {
-    width: 100%;
-  }
-  
+:where(.css-dev-only-do-not-override-zg0ahe).ant-form-item .ant-form-item-label > label {
+  color: #fff;
+}
+
+.wrapper h2 {
+  color: #fff;
+}
+
+/* Container for the form */
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 400px;
+  padding: 30px 40px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  text-align: center;
+}
+
+/* Title style */
+.wrapper h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.wrapper button {
+  border-radius: 5px;
+}
+
+/* Input field styles */
+.wrapper .ant-input,
+.wrapper .ant-input-password,
+.wrapper .ant-picker {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+}
+
+.wrapper .ant-input:focus,
+.wrapper .ant-input-password:focus,
+.wrapper .ant-picker:hover,
+.wrapper .ant-picker-focused {
+  border-color: #fff;
+}
+
+/* Placeholder text color */
+.wrapper .ant-input::placeholder,
+.wrapper .ant-input-password::placeholder,
+.wrapper .ant-picker-input > input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Input validation states */
+.ant-input-success,
+.ant-picker-selected-date {
+  border-color: #52c41a !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ant-input-error {
+  border-color: #ff4d4f !important;
+}
+
+/* Error message color */
+.ant-form-item-explain-error {
+  color: #ff4d4f;
+}
+
+/* Suffix text color */
+.input-suffix {
+  color: #fff;
+}
+
+/* Adjust label color */
+.ant-form-item-label {
+  color: #fff !important;
+}
+
+.ant-form-item-control-input {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Custom button styles */
+.custom-button-item {
+  margin-top: 20px;
+}
+
+/* General adjustments */
+.ant-picker {
+  width: 100%;
+}
+

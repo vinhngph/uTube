@@ -14,10 +14,52 @@ const Video = () => {
   const videoRef = useRef(null);
   const location = useLocation();
 
+  const timerInterval = useRef(null);
+
   useEffect(() => {
     fetchVideoInfoAndOwner();
-    handleView();
+    fetchInteractions();
 
+    const video = document.querySelector('video');
+
+    let timer = 0;
+
+    const handlePlay = () => {
+      timerInterval.current = setInterval(() => {
+        ++timer;
+        checkViewTime();
+      }, 1000);
+    };
+
+    const handlePause = () => {
+      clearInterval(timerInterval.current);
+    };
+
+    const handleEnded = () => {
+      clearInterval(timerInterval.current);
+    }
+
+    const checkViewTime = () => {
+      if (timer >= (video.duration / 2)) {
+        timer = 0;
+        handleView();
+      }
+    }
+
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('ended', handleEnded);
+
+    return () => {
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('ended', handleEnded);
+
+      clearInterval(timerInterval.current);
+    }
+  }, [videoId]);
+
+  useEffect(() => {
     const video = document.querySelector('video');
     postHistory(video.currentTime);
 

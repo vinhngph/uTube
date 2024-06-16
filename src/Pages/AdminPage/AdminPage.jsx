@@ -5,10 +5,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.css';
 import './AdminPage.css'; // Import the CSS file
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
 
 Modal.setAppElement('#root'); // Specify the root element for accessibility
 
-const AdminPage = () => {
+const AdminPage = ({sidebar}) => {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState('');
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -36,7 +37,7 @@ const AdminPage = () => {
 
   useEffect(() => {
     const userId = getUserIdFromCookie();
-    axios.get(API + `/api/staff/review?user_id=${userId}`)
+    axios.get(API + `/api/admin/review?user_id=${userId}`)
       .then(response => {
         setVideos(response.data || []);
       })
@@ -48,7 +49,7 @@ const AdminPage = () => {
 
   const handleAccept = (videoId) => {
     const userId = getUserIdFromCookie();
-    axios.put(API + `/api/staff/review?user_id=${userId}&video_id=${videoId}`)
+    axios.put(API + `/api/admin/review?user_id=${userId}&video_id=${videoId}`)
       .then(response => {
         if (response.status === 200) {
           setVideos(prevVideos => prevVideos.filter(video => video.videoId !== videoId));
@@ -70,7 +71,7 @@ const AdminPage = () => {
 
   const handleDelete = (videoId) => {
     const userId = getUserIdFromCookie();
-    axios.delete(API + `/api/user/video/management?user_id=${userId}&video_id=${videoId}`)
+    axios.delete(API + `/api/admin/review?user_id=${userId}&video_id=${videoId}`)
       .then(response => {
         if (response.status === 200) {
           setVideos(prevVideos => prevVideos.filter(video => video.videoId !== videoId));
@@ -99,7 +100,9 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="admin-page">
+    <>
+<Sidebar sidebar={sidebar} />
+<div className={`admin-page ${sidebar ? '' : 'large-container'}`}>
       <ToastContainer />
       <h1>Admin Page</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -113,7 +116,7 @@ const AdminPage = () => {
               <h2 className="video-title">{video.videoTitle}</h2>
               <p className="video-description">{video.videoDescription}</p>
               <p className="video-meta">{new Date(video.videoDate).toLocaleString()}</p>
-              <p className="video-owner">Owner: {video.videoOwner}</p>
+              <p className="video-owner">Owner: {video.videoChannelName}</p>
               <p className="video-meta">Status: {video.videoStatus ? 'Accepted' : 'Pending'}</p>
               <div className="button-group">
                 <button className="button-accept" onClick={() => handleAccept(video.videoId)}>Accept</button>
@@ -147,6 +150,8 @@ const AdminPage = () => {
         </Modal>
       )}
     </div>
+    </>
+    
   );
 };
 

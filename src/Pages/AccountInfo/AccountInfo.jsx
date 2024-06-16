@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Typography, Spin, Alert, Button } from 'antd';
+import { Form, Input, Typography, Spin, Alert, Button, DatePicker, message } from 'antd';
+import axios from 'axios';
 import { API } from '../../constants';
 import './AccountInfo.css';
+import Sidebar from '../../Components/Sidebar/Sidebar';
 
 const { Title } = Typography;
 
-// Function to get a cookie value by name
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -13,7 +14,6 @@ const getCookie = (name) => {
   return null;
 };
 
-// Function to get the user ID from the user cookie
 const getUserIdFromCookie = () => {
   const userCookie = getCookie('user');
   if (userCookie) {
@@ -28,10 +28,10 @@ const getUserIdFromCookie = () => {
   return null;
 };
 
-const AccountInfo = () => {
+const AccountInfo = ({sidebar}) => {
   const [accountDetails, setAccountDetails] = useState(null);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false); // State to manage edit mode
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
@@ -42,38 +42,40 @@ const AccountInfo = () => {
         return;
       }
 
-      let user = null;
-      let userRole = null;
-      let email = null;
-
       try {
-        // Fetch all users and staff to find the current user's details
         const usersResponse = await fetch(API + '/api/accounts/users');
         const users = await usersResponse.json();
-        user = users.find((u) => u.userId === userId);
+        let user = users.find((u) => u.userId === userId);
 
         if (!user) {
-          const staffsResponse = await fetch(API + '/api/accounts/staffs');
+          const staffsResponse = await fetch(API + '/api/accounts/admins');
           const staffs = await staffsResponse.json();
           user = staffs.find((s) => s.userId === userId);
         }
 
-        if (user) {
-          userRole = user.role;
-          email = user.email;
-        } else {
+        if (!user) {
           setError('User not found');
           return;
         }
 
-        // Fetch account details using the userId
         const detailsResponse = await fetch(API + `/api/accounts/details?user_id=${userId}`);
         if (detailsResponse.status === 404) {
           setError('User ID is wrong or something went wrong');
           return;
         }
+
         const details = await detailsResponse.json();
-        setAccountDetails({ ...details, email, username: user.username });
+        const date = new Date(details.user_dob);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        const user_dob = `${year}-${month}-${day}`;
+        const user_id = details.user_id;
+        const user_fullname = details.user_fullname;
+
+        setAccountDetails({ user_dob: user_dob, user_id: user_id, user_fullname: user_fullname, email: user.email, username: user.username });
       } catch (error) {
         setError('Failed to fetch account details');
       }
@@ -94,6 +96,27 @@ const AccountInfo = () => {
     setAccountDetails({ ...accountDetails, user_dob: e.target.value });
   };
 
+  const handleSave = async () => {
+    try {
+      const userId = getUserIdFromCookie();
+      if (!userId) {
+        setError('User ID not found in cookies');
+        return;
+      }
+
+      const { user_fullname, user_dob } = accountDetails;
+      console.log(user_dob)
+
+      await axios.put(API + `/api/accounts/details?user_id=${userId}&full_name=${user_fullname}&dob=${user_dob}`);
+
+      setIsEditing(false); // Exit edit mode after successful save
+      setError(null); // Clear any existing errors
+      message.success('Account details updated successfully'); // Show success message
+    } catch (error) {
+      setError('Failed to save account details');
+    }
+  };
+
   if (error) {
     return <Alert message="Error" description={error} type="error" showIcon />;
   }
@@ -103,7 +126,9 @@ const AccountInfo = () => {
   }
 
   return (
-    <div className="account-info-container">
+    <>
+<Sidebar sidebar={sidebar} />
+<div className={`account-info-container ${sidebar ? '' : 'large-container'}`}>
       <Title level={2} className="account-info-title">Account Details</Title>
       <Form layout="vertical" className="account-info-form">
         <Form.Item label="User ID">
@@ -124,18 +149,20 @@ const AccountInfo = () => {
         </Form.Item>
         <Form.Item label="Date of Birth">
           {isEditing ? (
-            <Input value={accountDetails.user_dob} onChange={handleChangeDOB} />
+            <Input type='date' value={accountDetails.user_dob} onChange={handleChangeDOB} />
           ) : (
-            <Input value={accountDetails.user_dob} readOnly />
+            <Input type='date' value={accountDetails.user_dob} readOnly />
           )}
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={handleToggleEdit}>
+          <Button type="primary" onClick={isEditing ? handleSave : handleToggleEdit}>
             {isEditing ? 'Save' : 'Edit'}
           </Button>
         </Form.Item>
       </Form>
     </div>
+    
+    </>
   );
 };
 

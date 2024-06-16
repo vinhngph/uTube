@@ -4,11 +4,12 @@ import Dropzone from 'react-dropzone';
 import { PlusOutlined } from '@ant-design/icons';
 import './UploadVideo.css';
 import { API } from '../../constants';
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const UploadVideo = () => {
+const UploadVideo = ({sidebar}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [videoFile, setVideoFile] = useState(null);
@@ -92,19 +93,21 @@ const UploadVideo = () => {
   };
 
   return (
-    <div className="upload-video-container">
+    <>
+    <Sidebar sidebar={sidebar} />
+    <div className={`upload-video-container ${sidebar ? '' : 'large-container'}`}>
       <div className="upload-video-header">
-        <Title level={2}>Upload Video</Title>
+        <Title level={2}>Upload Video </Title>
       </div>
 
       <Form>
         <div className="dropzone-container">
           <div className="dropzone-section">
-            <label>Video File</label>
-            <Dropzone onDrop={onVideoDrop} multiple={false} maxSize={800000000}>
+            <label>Video File (Allow video type)</label>
+            <Dropzone onDrop={onVideoDrop} multiple={false} >
               {({ getRootProps, getInputProps }) => (
                 <div className="dropzone" {...getRootProps()}>
-                  <input {...getInputProps()} />
+                  <input {...getInputProps() } accept="video/*" />
                   {videoFile ? (
                     <video width="100%" height="240px" controls>
                       <source src={videoUrl} type="video/mp4" />
@@ -140,11 +143,12 @@ const UploadVideo = () => {
         <label>Description</label>
         <TextArea onChange={handleChangeDescription} value={description} />
 
-        <Button type="primary" size="large" onClick={onSubmit}>
+        <Button type="primary" size="large" onClick={onSubmit} className='submit-button'>
           Submit
         </Button>
       </Form>
     </div>
+    </>
   );
 };
 
