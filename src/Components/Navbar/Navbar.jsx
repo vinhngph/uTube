@@ -56,7 +56,9 @@ const Navbar = ({ setSidebar }) => {
   };
 
   const closeUserDropdown = () => {
-    setShowUserDropdown(false);
+    if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+      setShowUserDropdown(false);
+    }
   };
 
   const closeSearchResults = () => {

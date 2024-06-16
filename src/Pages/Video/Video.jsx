@@ -118,7 +118,7 @@ const Video = () => {
   };
 
   const handleView = () => {
-    axios.put(API + `/api/video/view`, null, { params: { id: videoId } })
+    axios.put(API + `/api/video/view?id=${videoId}`)
       .then(() => {
         fetchInteractions();
       })

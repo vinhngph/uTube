@@ -22,7 +22,8 @@ const Search = () => {
   const fetchSearchResults = async () => {
     try {
       if (key) {
-        const response = await fetch(API + `/api/home/search/results?key=${key}`);
+        const encodedKey = encodeURIComponent(key);
+        const response = await fetch(API + `/api/home/search/results?key=${encodedKey}`);
         const data = await response.json();
         if (data.length > 0) {
           setVideos(data);

@@ -1,3 +1,4 @@
+/* Background image for login page */
 .login-background {
     position: fixed;
     top: 0;
@@ -8,96 +9,103 @@
     background-position: center;
     background-image: url('../../assets/background_login.jpg');
   }
-.wrapper {
+  :where(.css-dev-only-do-not-override-zg0ahe).ant-form {
+    color: #fff;
+  }
+  :where(.css-dev-only-do-not-override-zg0ahe).ant-form-item .ant-form-item-label >label {
+    color: #fff;
+  }
+  
+  /* Container for the form */
+  .wrapper {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    backdrop-filter: blur(30px);
-    color: #fff;
     width: 80%;
     max-width: 400px;
     padding: 30px 40px;
     border-radius: 10px;
-}
-.wrapper h1 {
-    font-size: 36px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    color: #fff;
     text-align: center;
-}
-.wrapper .input-box {
-    position: relative;
+  }
+  
+  /* Title style */
+  .wrapper h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .wrapper button{
+    border-radius: 5px;
+  }
+  
+  /* Input field styles */
+  .wrapper .ant-input,
+  .wrapper .ant-input-password {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+  }
+  
+  .wrapper .ant-input:focus,
+  .wrapper .ant-input-password:focus {
+    border-color: #fff;
+  }
+  
+  /* Placeholder text color */
+  .wrapper .ant-input::placeholder,
+  .wrapper .wrapper .ant-input-password::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* Custom input text colors */
+  .input-black {
+    color: #000 !important;
+  }
+  
+  .input-white {
+    color: #fff !important;
+  }
+  
+  /* Input validation states */
+  .ant-input-success {
+    border-color: #52c41a !important;
+  }
+  
+  .ant-input-error {
+    border-color: #ff4d4f !important;
+  }
+  
+  /* Error message color */
+  .ant-form-item-explain-error {
+    color: #ff4d4f;
+  }
+  
+  /* Suffix text color */
+  .input-suffix {
+    color: #fff;
+  }
+  
+  /* Adjust label color */
+  .ant-form-item-label {
+    color: #fff !important;
+  }
+  
+  .ant-form-item-control-input {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  /* Custom button styles */
+  .custom-button-item {
+    margin-top: 20px;
+  }
+  
+  /* General adjustments */
+  .ant-picker {
     width: 100%;
-    height: 50px;
-    margin: 30px 0;
-}
-.input-box input{
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 40px;
-    font-size: 16px;
-    color: #fff;
-    padding: 20px 45px 20px 20px;
-}
-.input-box input::placeholder{
-    color: #fff;
-}
-.input-box .icon{
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-}
-.wrapper .remember-forgot{
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin: -15px 0 15px;
-}
-.remember-forgot label input{
-    accent-color: red;
-    margin-right: 4px;
-}
-.remember-forgot a{
-    color: #fff;
-    text-decoration: underline;
-}
-.remember-forgot a:hover{
-    color: red;
-}
-.wrapper button{
-    width: 100%;
-    height: 45px;
-    background: #fff;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-.wrapper .register-link{
-    font-size: 14px;
-    text-align: center;
-    margin: 20px 0 15px;
-}
-.register-link p a{
-    color: #fff;
-    text-decoration: underline;
-    font-weight: 600;
-}
-.register-link p a:hover{
-    color: red;
-}
+  }
+  

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../constants';
-import { Link } from 'react-router-dom'; // Import Link component for navigation
-import './History.css'; // Import CSS file for styling
+import { Link } from 'react-router-dom';
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
+import './History.css';
 
 const getUserIdFromCookie = () => {
   const userCookie = document.cookie.split('; ').find(row => row.startsWith('user='));
@@ -18,7 +19,7 @@ const getUserIdFromCookie = () => {
   return null;
 };
 
-const History = () => {
+const History = ({ sidebar }) => {
   const [watchedVideos, setWatchedVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,11 +65,9 @@ const History = () => {
       }
 
       await axios.delete(API + `/api/user/history/${videoId}?user_id=${userId}`);
-      // After successful deletion, fetch the updated history
       fetchHistory();
     } catch (error) {
       console.error('Failed to delete video:', error);
-      // Handle error
     }
   };
 
@@ -76,29 +75,32 @@ const History = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="history-container">
-      <h1 className="history-title">Watch History</h1>
-      <div className="video-list">
-        {watchedVideos.map((video) => (
-          <div key={video.videoId} className="video-card">
-            <Link to={`/watch/${video.videoId}`} className="thumbnail-container">
-              <img src={video.videoThumbnail} alt={video.videoTitle} className="card-img-top" />
-            </Link>
-            <div className="card-body">
-              <h5 className="card-title">{video.videoTitle}</h5>
-              <p className="card-text">{video.videoDescription}</p>
-              <div className="card-details">
-                <span className="views">{video.views} views</span>
-                <span className="timestamp">{video.timestamp}</span>
+    <>
+      <Sidebar sidebar={sidebar} />
+      <div className={`history-container ${sidebar ? '' : 'large-container'}`}>
+        <h1 className="history-title">Watch History</h1>
+        <div className="video-list">
+          {watchedVideos.map((video) => (
+            <div key={video.videoId} className="video-card">
+              <Link to={`/watch/${video.videoId}`} className="thumbnail-container">
+                <img src={video.videoThumbnail} alt={video.videoTitle} className="card-img-top" />
+              </Link>
+              <div className="card-body">
+                <h5 className="card-title">{video.videoTitle}</h5>
+                <p className="card-text">{video.videoDescription}</p>
+                <div className="card-details">
+                  <span className="views">{video.views} views</span>
+                  <span className="timestamp">{video.timestamp}</span>
+                </div>
+                <button onClick={() => handleDelete(video.videoId)} className="delete-button">
+                  Remove from history
+                </button>
               </div>
-              <button onClick={() => handleDelete(video.videoId)} className="delete-button">
-                Remove from history
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

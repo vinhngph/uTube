@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import the Sidebar component
 import './ManageChannel.css';
 import { API } from '../../constants';
 
-const ManageChannel = () => {
+const ManageChannel = ({ sidebar }) => {
   const [userId, setUserId] = useState(null);
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
@@ -67,31 +68,33 @@ const ManageChannel = () => {
 
   return (
     <>
-    <div className="manage-channel">
-      <h1>Manage Channel</h1>
-      {error ? (
-        <p className="error-message">{error}</p>
-      ) : videos.length > 0 ? (
-        <div className="video-list">
-          {videos.map(video => (
-            <div key={video.videoId} className="video-item">
-              <Link to={`/watch/${video.videoId}`}>
-                <img src={video.videoThumbnail} alt={video.videoTitle} className="video-thumbnail" />
-              </Link>
-              <div className="video-details">
-                <h2 className="video-title">{video.videoTitle}</h2>
-                <p className="video-description">{video.videoDescription}</p>
-                <p className="video-date">{new Date(video.videoDate).toLocaleDateString()}</p>
-              </div>
+      <Sidebar sidebar={sidebar} />
+      <div className={`manage-channel-container ${sidebar ? '' : 'large-container'}`}>
+        <div className="manage-channel">
+          <h1>Manage Channel</h1>
+          {error ? (
+            <p className="error-message">{error}</p>
+          ) : videos.length > 0 ? (
+            <div className="video-list">
+              {videos.map(video => (
+                <div key={video.videoId} className="video-item">
+                  <Link to={`/watch/${video.videoId}`}>
+                    <img src={video.videoThumbnail} alt={video.videoTitle} className="video-thumbnail" />
+                  </Link>
+                  <div className="video-details">
+                    <h2 className="video-title">{video.videoTitle}</h2>
+                    <p className="video-description">{video.videoDescription}</p>
+                    <p className="video-date">{new Date(video.videoDate).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <p>No videos found.</p>
+          )}
         </div>
-      ) : (
-        <p>No videos found.</p>
-      )}
-    </div>
+      </div>
     </>
-    
   );
 };
 
