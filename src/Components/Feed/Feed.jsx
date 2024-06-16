@@ -21,13 +21,21 @@ const Feed = () => {
     navigate(`/watch/${videoId}`);
   };
 
+  const truncateString = (str) =>  {
+    const maxLength = 50;
+    if (str.length <= maxLength) {
+        return str;
+    }
+    return str.slice(0, maxLength - 3) + '...';
+}
+
   return (
     <div className="feed">
       {videos.map(video => (
         <div key={video.videoId} className="card" onClick={() => handleCardClick(video.videoId)}>
           <img src={video.videoThumbnail} alt={video.videoTitle} className="thumbnail" />
           <div className="video-info">
-            <h2 className="video-title">{video.videoTitle}</h2>
+            <h2 className="video-title">{truncateString(video.videoTitle)}</h2>
             <p className="video-channel">{video.videoChannelName}</p>
             <p className="video-views">{video.videoViews} views</p>
             <p className="video-date">{new Date(video.videoDate).toLocaleDateString()}</p>

@@ -22,6 +22,14 @@ const Search = ({ sidebar }) => {
     fetchSearchResults();
   }, [key]);
 
+  const truncateString = (str) =>  {
+    const maxLength = 20;
+    if (str.length <= maxLength) {
+        return str;
+    }
+    return str.slice(0, maxLength - 3) + '...';
+}
+
   const fetchSearchResults = async () => {
     setLoading(true); // Set loading state when fetching data
 
@@ -69,11 +77,11 @@ const Search = ({ sidebar }) => {
                   </Link>
                   <div className="card-body">
                     <Link to={`/watch/${video.videoId}`}>
-                      <h5 className="card-title">{video.videoTitle}</h5>
+                      <h5 className="card-title">{truncateString(video.videoTitle)}</h5>
                     </Link>
-                    <p className="card-text">{video.videoDescription}</p>
+                    <h3 className="card-text">{video.videoChannelName}</h3>
                     <div className="card-details">
-                      <span className="views">{video.views} views</span>
+                      <span className="views">{video.videoViews} views</span>
                     </div>
                   </div>
                 </Card>

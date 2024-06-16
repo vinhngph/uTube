@@ -2,22 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../constants';
 import { Link } from 'react-router-dom';
+import { Table, Space, Spin, message } from 'antd'; // Import Table and other necessary components from Ant Design
 import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
 import './History.css';
 
-const getUserIdFromCookie = () => {
-  const userCookie = document.cookie.split('; ').find(row => row.startsWith('user='));
-  if (userCookie) {
-    try {
-      const userData = JSON.parse(userCookie.split('=')[1]);
-      return userData.userId;
-    } catch (error) {
-      console.error('Failed to parse user cookie', error);
-      return null;
-    }
-  }
-  return null;
-};
 
 const History = ({ sidebar }) => {
   const [watchedVideos, setWatchedVideos] = useState([]);
@@ -27,6 +15,27 @@ const History = ({ sidebar }) => {
   useEffect(() => {
     fetchHistory();
   }, []);
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  const getUserIdFromCookie = () => {
+    const userCookie = getCookie('user');
+    if (userCookie) {
+      try {
+        const userData = JSON.parse(userCookie);
+        return userData.userId;
+      } catch (error) {
+        console.error('Failed to parse user cookie', error);
+        return null;
+      }
+    }
+    return null;
+  };
 
   const fetchHistory = async () => {
     const userId = getUserIdFromCookie();
@@ -71,7 +80,49 @@ const History = ({ sidebar }) => {
     }
   };
 
-  if (loading) return <div className="loader"></div>;
+  const columns = [
+    {
+      title: 'Thumbnail',
+      dataIndex: 'videoThumbnail',
+      key: 'thumbnail',
+      render: (thumbnail, record) => (
+        <Link to={`/watch/${record.videoId}`} className="thumbnail-container">
+          <img src={thumbnail} alt={record.videoTitle} className="card-img-top" />
+        </Link>
+      ),
+    },
+    {
+      title: 'Title',
+      dataIndex: 'videoTitle',
+      key: 'title',
+      render: (title) => <span>{title}</span>,
+    },
+    {
+      title: 'Description',
+      dataIndex: 'videoDescription',
+      key: 'description',
+      render: (description) => <span>{description}</span>,
+    },
+    {
+      title: 'Watched',
+      dataIndex: 'trackTime',
+      key: 'trackTime',
+      render: (trackTime) => <span>{trackTime} seconds</span>,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Space size="middle">
+          <button onClick={() => handleDelete(record.videoId)} className="delete-button">
+            Remove
+          </button>
+        </Space>
+      ),
+    },
+  ];
+
+  if (loading) return <Spin size="large" />; // Use Ant Design's Spin component for loading indicator
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -79,26 +130,12 @@ const History = ({ sidebar }) => {
       <Sidebar sidebar={sidebar} />
       <div className={`history-container ${sidebar ? '' : 'large-container'}`}>
         <h1 className="history-title">Watch History</h1>
-        <div className="video-list">
-          {watchedVideos.map((video) => (
-            <div key={video.videoId} className="video-card">
-              <Link to={`/watch/${video.videoId}`} className="thumbnail-container">
-                <img src={video.videoThumbnail} alt={video.videoTitle} className="card-img-top" />
-              </Link>
-              <div className="card-body">
-                <h5 className="card-title">{video.videoTitle}</h5>
-                <p className="card-text">{video.videoDescription}</p>
-                <div className="card-details">
-                  <span className="views">{video.views} views</span>
-                  <span className="timestamp">{video.timestamp}</span>
-                </div>
-                <button onClick={() => handleDelete(video.videoId)} className="delete-button">
-                  Remove from history
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Table
+          dataSource={watchedVideos}
+          columns={columns}
+          rowKey="videoId"
+          pagination={{ pageSize: 10 }} // Example pagination settings
+        />
       </div>
     </>
   );

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, useLocation } from 'react-router-dom';
-import './Video.css';
+import './Video.css'; // Assuming you have custom styles
 import { API } from '../../constants';
-import { message } from 'antd';
+import { message, Button, Typography } from 'antd';
+import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+
+const { Title, Paragraph } = Typography;
 
 const Video = () => {
   const { videoId } = useParams();
@@ -199,27 +202,28 @@ const Video = () => {
           <div className="video-layout">
             <div className="video-column">
               <div className="video-wrapper">
-                <video ref={videoRef}  controls className="video-player" autoPlay>
-                <source src={API + `/api/video?id=${videoId}`} type="video/webm"/>
+                <video ref={videoRef} controls className="video-player" autoPlay>
+                  <source src={API + `/api/video?id=${videoId}`} type="video/webm" />
                 </video>
               </div>
             </div>
             <div className="info-column">
-              <h1 className="video-title">{videoInfo.title}</h1>
+              <Title level={2} className="video-title">{videoInfo.title}</Title>
               <div className="interaction-buttons">
-                <button className="like-button" onClick={handleLike}>
+                <Button type="primary" size="large" onClick={handleLike} icon={<LikeOutlined />}>
                   Like {interaction.likes}
-                </button>
-                <button className="dislike-button" onClick={handleDislike}>
+                </Button>
+                <Button type="danger" size="large" onClick={handleDislike} icon={<DislikeOutlined />}>
                   Dislike {interaction.dislikes}
-                </button>
+                </Button>
               </div>
-              <p className="video-date">Posted on: {videoInfo.date}</p>
+
+              <p className="video-date-1">Posted on: {videoInfo.date}</p>
               <p className="video-owner">Channel: {videoInfo.owner}</p>
-              <p className="video-description">{videoInfo.description}</p>
+              <Paragraph className="video-description">{videoInfo.description}</Paragraph>
             </div>
           </div>
-          <div className="video-views">
+          <div className="video-views-1">
             Views: {interaction.views}
           </div>
         </>

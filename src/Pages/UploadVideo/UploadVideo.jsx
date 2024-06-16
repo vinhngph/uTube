@@ -41,13 +41,23 @@ const UploadVideo = ({sidebar}) => {
   };
 
   const onVideoDrop = (acceptedFiles) => {
-    setVideoFile(acceptedFiles[0]);
-    setVideoUrl(URL.createObjectURL(acceptedFiles[0]));
+    const file = acceptedFiles[0];
+    if (file && file.type.startsWith('video/')) {
+      setVideoFile(file);
+      setVideoUrl(URL.createObjectURL(file));
+    } else {
+      message.error('Please upload a valid video file');
+    }
   };
 
   const onThumbnailDrop = (acceptedFiles) => {
-    setThumbnailFile(acceptedFiles[0]);
-    setThumbnailUrl(URL.createObjectURL(acceptedFiles[0]));
+    const file = acceptedFiles[0];
+    if (file && file.type.startsWith('image/')) {
+      setThumbnailFile(file);
+      setThumbnailUrl(URL.createObjectURL(file));
+    } else {
+      message.error('Please upload a valid image file');
+    }
   };
 
   const onSubmit = () => {
