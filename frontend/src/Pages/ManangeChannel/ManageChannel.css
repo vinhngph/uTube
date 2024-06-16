@@ -1,0 +1,37 @@
+/* ManageChannel.css */
+.manage-channel-container {
+  margin-left: 200px; /* Adjust this value based on your sidebar width */
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+.manage-channel-container.large-container {
+  margin-left: 80px; /* Adjust this value for the collapsed sidebar width */
+}
+
+.manage-channel {
+  padding: 20px;
+}
+
+.video-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.video-item {
+  width: 30%;
+  margin: 10px;
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: auto;
+}
+
+.video-details {
+  padding: 10px 0;
+}
+
+.error-message {
+  color: red;
+}

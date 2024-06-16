@@ -1,0 +1,32 @@
+.manage-account {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.manage-account h2 {
+    margin-bottom: 10px;
+}
+
+.action-button {
+    margin-right: 10px;
+}
+
+.message {
+    margin-top: 10px;
+    color: #f56a00;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.ant-table-row:hover {
+    cursor: pointer;
+}
+
