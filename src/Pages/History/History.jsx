@@ -126,6 +126,7 @@ const History = ({ sidebar }) => {
   if (error) return <div>Error: {error}</div>;
 
   return (
+
     <>
       <Sidebar sidebar={sidebar} />
       <div className={`history-container ${sidebar ? '' : 'large-container'}`}>
@@ -134,7 +135,7 @@ const History = ({ sidebar }) => {
           dataSource={watchedVideos}
           columns={columns}
           rowKey="videoId"
-          pagination={{ pageSize: 10 }} // Example pagination settings
+          pagination={{ pageSize: 5 }} // Example pagination settings
         />
       </div>
     </>

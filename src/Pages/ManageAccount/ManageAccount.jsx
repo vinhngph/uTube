@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Table, Button, Modal, message as antdMessage } from 'antd';
 import './ManageAccount.css'; // Ensure this file exists and has the necessary styles
 import { API } from '../../constants';
+import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
 
-const ManageAccount = () => {
+const ManageAccount = ({sidebar}) => {
     const [users, setUsers] = useState([]);
     const [staffs, setStaffs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -190,7 +191,9 @@ const ManageAccount = () => {
     ];
 
     return (
-        <div className='manage-account'>
+        <>
+        <Sidebar sidebar={sidebar} />
+        <div className={`manage-account ${sidebar ? '' : 'large-container'}`}>
             {loading ? (
                 <p>Loading...</p>
             ) : (
@@ -200,6 +203,7 @@ const ManageAccount = () => {
                         columns={columns}
                         dataSource={filteredAccounts(users)}
                         rowKey="userId"
+                        pagination={{ pageSize: 5 }}
                         onRow={(record) => ({
                             onClick: () => handleAccountClick(record.userId)
                         })}
@@ -210,6 +214,7 @@ const ManageAccount = () => {
                         columns={columns}
                         dataSource={filteredAccounts(staffs)}
                         rowKey="userId"
+                        pagination={{ pageSize: 5 }}
                         onRow={(record) => ({
                             onClick: () => handleAccountClick(record.userId)
                         })}
@@ -235,6 +240,7 @@ const ManageAccount = () => {
                 </>
             )}
         </div>
+        </>
     );
 };
 

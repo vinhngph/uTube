@@ -9,7 +9,7 @@ import Register from './Pages/Register/Register'
 import UploadVideo from './Pages/UploadVideo/UploadVideo'
 import ManageAccount from './Pages/ManageAccount/ManageAccount';
 import ManageChannel from './Pages/ManangeChannel/ManageChannel';
-import Search from './Components/Search/Search';
+import Search from './Pages/Search/Search';
 import History from './Pages/History/History';
 import AdminPage from './Pages/AdminPage/AdminPage';
 import AccountInfo from './Pages/AccountInfo/AccountInfo';

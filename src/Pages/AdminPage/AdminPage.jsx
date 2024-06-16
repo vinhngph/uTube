@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API } from '../../constants';
 import { ToastContainer, toast } from 'react-toastify';
 import Modal from 'react-modal';
+import { Spin } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
 import './AdminPage.css'; // Import the CSS file
 import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar component
@@ -11,6 +12,7 @@ Modal.setAppElement('#root'); // Specify the root element for accessibility
 
 const AdminPage = ({sidebar}) => {
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedVideo, setSelectedVideo] = useState(null);
 
@@ -40,12 +42,15 @@ const AdminPage = ({sidebar}) => {
     axios.get(API + `/api/admin/review?user_id=${userId}`)
       .then(response => {
         setVideos(response.data || []);
+        setLoading(false); // Set loading to false on successful fetch
       })
       .catch(error => {
         console.error('Error fetching videos:', error);
         setError('Error fetching videos');
+        setLoading(false); // Set loading to false on error
       });
   }, []);
+  
 
   const handleAccept = (videoId) => {
     const userId = getUserIdFromCookie();
@@ -98,6 +103,9 @@ const AdminPage = ({sidebar}) => {
   const closeModal = () => {
     setSelectedVideo(null);
   };
+
+  if (loading) return <Spin size="large" />; // Use Ant Design's Spin component for loading indicator
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>

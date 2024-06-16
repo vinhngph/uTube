@@ -3,12 +3,15 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../Components/Sidebar/Sidebar'; // Import the Sidebar component
 import './ManageChannel.css';
+import { Spin } from 'antd'; // Import the Spin component from Ant Design
 import { API } from '../../constants';
 
 const ManageChannel = ({ sidebar }) => {
   const [userId, setUserId] = useState(null);
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -41,30 +44,36 @@ const ManageChannel = ({ sidebar }) => {
   }, []);
 
   useEffect(() => {
-    if (userId) {
-      axios.get(API + '/api/user/video/management', {
-        params: { user_id: userId }
+    setLoading(true); // Set loading to true when fetching starts
+    axios.get(API + '/api/user/video/management', {
+      params: { user_id: userId }
+    })
+      .then(response => {
+        setVideos(response.data);
+        setError('');
+        setLoading(false); // Set loading to false on successful fetch
       })
-        .then(response => {
-          setVideos(response.data);
-          setError('');
-        })
-        .catch(error => {
-          if (error.response) {
-            if (error.response.status === 400) {
-              setError('Missing parameter: user_id.');
-            } else if (error.response.status === 404) {
-              setError('User ID not found.');
-            } else {
-              setError('Error fetching videos. Please try again later.');
-            }
+      .catch(error => {
+        // Handle different error cases
+        setLoading(false); // Set loading to false on error
+        if (error.response) {
+          if (error.response.status === 400) {
+            setError('Missing parameter: user_id.');
+          } else if (error.response.status === 404) {
+            setError('User ID not found.');
           } else {
             setError('Error fetching videos. Please try again later.');
           }
-          console.error('Error fetching videos:', error);
-        });
-    }
+        } else {
+          setError('Error fetching videos. Please try again later.');
+        }
+        console.error('Error fetching videos:', error);
+      });
   }, [userId]);
+  
+
+  if (loading) return <Spin size="large" />; // Use Ant Design's Spin component for loading indicator
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
