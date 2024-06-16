@@ -111,7 +111,7 @@ public class AccountDAO {
         }
     }
 
-    public static ArrayList<UserDTO> getAllStaffs() {
+    public static ArrayList<UserDTO> getAllAdmins() {
         Connection conn = DBConnect.getConnection();
         ArrayList<UserDTO> users = new ArrayList<UserDTO>();
 
@@ -236,6 +236,66 @@ public class AccountDAO {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean isEmail(String email) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT user_email FROM User WHERE user_email = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean isUsername(String username) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT user_username FROM User WHERE user_username = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean isAdmin(int userId) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "SELECT user_role FROM User WHERE user_id = ?";
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int role = rs.getInt("user_role");
+                if (role == 2) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
             return false;
         } finally {
             DBConnect.closeConnection(conn);
@@ -449,6 +509,27 @@ public class AccountDAO {
             PreparedStatement stm = conn.prepareStatement(query);
             stm.setString(1, newPassword);
             stm.setString(2, email);
+
+            stm.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean modifyDetails(int userId, String fullName, Date dob) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query = "UPDATE User_Information SET user_fullname = ?, user_dob = ? WHERE user_id = ?";
+
+            PreparedStatement stm = conn.prepareStatement(query);
+            stm.setString(1, fullName);
+            stm.setDate(2, dob);
+            stm.setInt(3, userId);
 
             stm.executeUpdate();
 

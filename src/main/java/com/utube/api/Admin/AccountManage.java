@@ -1,4 +1,4 @@
-package com.utube.api.Accounts;
+package com.utube.api.Admin;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/api/accounts" })
+@WebServlet(urlPatterns = { "/api/admin/accounts" })
 @MultipartConfig()
 public class AccountManage extends HttpServlet {
     @Override

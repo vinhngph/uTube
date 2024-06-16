@@ -8,8 +8,8 @@ CREATE TABLE Role
 );
 
 INSERT INTO Role (role_code, role_name, role_desc)
-VALUES (1, 'ADMIN', 'Admin Role'),
-       (2, 'STAFF', 'Staff Role'),
+VALUES (1, 'ROOT', 'Root Role'),
+       (2, 'ADMIN', 'Admin Role'),
        (3, 'USER', 'User Role');
 
 CREATE TABLE User
@@ -29,16 +29,6 @@ CREATE TABLE User_Information
     user_dob      DATE        NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User (user_id)
 );
-
-INSERT INTO User (user_username, user_email, user_password, user_role)
-VALUES ('admin', 'admin@gmail.com', 'admin', 1),
-       ('staff', 'staff@gmail.com', 'staff', 2),
-       ('user', 'user@gmail.com', 'user', 3);
-
-INSERT INTO User_Information (user_id, user_fullname, user_dob)
-VALUES (1000, 'Admin', '2024-06-01'),
-       (1001, 'Staff', '2024-06-01'),
-       (1002, 'User', '2024-06-01');
 
 CREATE TABLE Session
 (

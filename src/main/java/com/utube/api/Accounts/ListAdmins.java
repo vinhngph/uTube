@@ -14,13 +14,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/api/accounts/staffs" })
+@WebServlet(urlPatterns = { "/api/accounts/admins" })
 @MultipartConfig()
-public class ListStaff extends HttpServlet {
+public class ListAdmins extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<UserDTO> users = AccountDAO.getAllStaffs();
+        ArrayList<UserDTO> users = AccountDAO.getAllAdmins();
 
         for (UserDTO user : users) {
             user.setPassword(null);

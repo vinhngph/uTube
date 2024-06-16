@@ -81,7 +81,7 @@ public class HomeDAO {
         Gson gson = new Gson();
 
         try {
-            String query = "SELECT DISTINCT video_title FROM Video WHERE video_title LIKE ?";
+            String query = "SELECT DISTINCT video_title FROM Video WHERE video_title LIKE ? AND video_status = true";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, "%" + keyWord + "%");
             ResultSet rs = ps.executeQuery();
@@ -131,7 +131,7 @@ public class HomeDAO {
                     "     Upload u ON v.video_id = u.video_id\n" +
                     "         JOIN\n" +
                     "     User_Information ui ON u.user_id = ui.user_id\n" +
-                    "WHERE video_title LIKE ?\n" +
+                    "WHERE video_title LIKE ? AND video_status = true\n" +
                     "ORDER BY video_views DESC";
 
             PreparedStatement ps = conn.prepareStatement(query);

@@ -1,5 +1,6 @@
 package com.utube.daos;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,7 @@ import com.google.gson.Gson;
 import com.utube.dtos.VideoDTO;
 import com.utube.utils.DBConnect;
 
-public class StaffDAO {
+public class AdminDAO {
     public static boolean isStaff(int userId) {
         Connection conn = DBConnect.getConnection();
         try {
@@ -86,6 +87,60 @@ public class StaffDAO {
             return gson.toJson(videos);
         } catch (SQLException e) {
             return gson.toJson(e.getMessage());
+        } finally {
+            DBConnect.closeConnection(conn);
+        }
+    }
+
+    public static boolean deleteVideo(String videoId, String storagePath) {
+        Connection conn = DBConnect.getConnection();
+
+        try {
+            String query_1 = "DELETE FROM Video_Like WHERE video_id = ?";
+            String query_2 = "DELETE FROM Video_Dislike WHERE video_id = ?";
+            String query_3 = "DELETE FROM Video_View WHERE video_id = ?";
+            String query_4 = "DELETE FROM Upload WHERE video_id = ?";
+            String query_5 = "DELETE FROM User_History WHERE video_id = ?";
+            String query_6 = "DELETE FROM Video WHERE video_id = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query_1);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            ps = conn.prepareStatement(query_2);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            ps = conn.prepareStatement(query_3);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            ps = conn.prepareStatement(query_4);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            ps = conn.prepareStatement(query_5);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            ps = conn.prepareStatement(query_6);
+            ps.setString(1, videoId);
+            ps.executeUpdate();
+
+            String videoPath = storagePath + File.separator + videoId;
+            File videoDir = new File(videoPath);
+
+            if (videoDir.exists()) {
+                File[] files = videoDir.listFiles();
+                for (File file : files) {
+                    file.delete();
+                }
+                videoDir.delete();
+            }
+
+            return true;
+        } catch (SQLException e) {
+            return false;
         } finally {
             DBConnect.closeConnection(conn);
         }

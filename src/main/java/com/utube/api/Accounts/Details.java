@@ -1,6 +1,7 @@
 package com.utube.api.Accounts;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import com.google.gson.Gson;
 import com.utube.daos.AccountDAO;
@@ -15,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = { "/api/accounts/details" })
 @MultipartConfig()
-public class ShowDetails extends HttpServlet {
+public class Details extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,6 +32,27 @@ public class ShowDetails extends HttpServlet {
 
             response.setContentType("application/json");
             response.getWriter().write(userJson);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        String fullName = request.getParameter("full_name");
+        Date dob = Date.valueOf(request.getParameter("dob"));
+
+        if (userId == 0 || fullName == null || fullName.isEmpty() || dob == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        boolean status = AccountDAO.modifyDetails(userId, fullName, dob);
+
+        if (status) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

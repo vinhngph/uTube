@@ -144,7 +144,7 @@ public class UserVideoDAO {
             ps.setString(1, videoId);
             ps.executeUpdate();
 
-            String videoPath = storagePath + "/" + videoId;
+            String videoPath = storagePath + File.separator + videoId;
             File videoDir = new File(videoPath);
 
             if (videoDir.exists()) {

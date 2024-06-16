@@ -1,10 +1,12 @@
-package com.utube.api.Staff;
+package com.utube.api.Admin;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.utube.daos.AccountDAO;
-import com.utube.daos.StaffDAO;
+import com.utube.daos.AdminDAO;
 import com.utube.daos.VideoDAO;
+import com.utube.utils.Config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -13,9 +15,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/api/staff/review" })
+@WebServlet(urlPatterns = { "/api/admin/review" })
 @MultipartConfig()
-public class Review extends HttpServlet {
+public class ReviewVideos extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,12 +33,12 @@ public class Review extends HttpServlet {
             return;
         }
 
-        if (!StaffDAO.isStaff(userId)) {
+        if (!AdminDAO.isStaff(userId)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        String result = StaffDAO.getReviewVideos();
+        String result = AdminDAO.getReviewVideos();
 
         response.setContentType("application/json");
         response.getWriter().write(result);
@@ -70,6 +72,36 @@ public class Review extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("user_id"));
+        String videoId = request.getParameter("video_id");
+
+        if (userId == 0 || videoId == null || videoId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        if (!AccountDAO.isAdmin(userId)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        String storagePath = null;
+        if (Config.getProperty("STORAGE_PATH") == null) {
+            storagePath = request.getServletContext().getRealPath(File.separator + "storage");
+        } else {
+            storagePath = Config.getProperty("STORAGE_PATH");
+        }
+
+        if (AdminDAO.deleteVideo(videoId, storagePath)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
