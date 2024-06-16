@@ -1,0 +1,86 @@
+/* UploadVideo.css */
+
+.upload-video-container {
+  max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+  background-color: #f0f2f5; /* Similar to YouTube background */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.upload-video-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dropzone-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.dropzone-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+}
+
+.dropzone {
+  width: 100%;
+  height: 240px;
+  border: 2px dashed #ccc; /* Dashed border for dropzone */
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border 0.3s ease;
+}
+
+.dropzone:hover {
+  border-color: #1890ff; /* Highlight border on hover */
+}
+
+.ant-input {
+  font-size: 16px;
+}
+
+.ant-progress-inner {
+  background-color: #1890ff; /* Progress bar color */
+}
+
+.ant-progress-text {
+  font-size: 14px;
+}
+
+.ant-btn-primary {
+  background-color: #1890ff; /* Primary button background */
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #40a9ff; /* Darker shade on hover */
+  border-color: #40a9ff;
+}
+
+.ant-typography {
+  color: #444; /* Text color */
+}
+
+.ant-form-item-label {
+  font-weight: bold; /* Bold labels */
+  margin-bottom: 4px;
+}
+
+.ant-form-item-explain {
+  font-size: 12px; /* Error message font size */
+  color: #f5222d; /* Error message color */
+}
+
+.submit-button {
+  text-align: center;
+  margin-top: 1rem;
+}

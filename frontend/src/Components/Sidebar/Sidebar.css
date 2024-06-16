@@ -1,0 +1,40 @@
+.sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  background: #fff;
+  padding-top: 80px;
+}
+
+.ant-layout-sider {
+  background: #fff; /* Set background to white */
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #ff0000 !important; /* YouTube red for selected item */
+  color: #fff !important; /* White text for selected item */
+}
+
+.ant-menu-item {
+  font-size: 16px;
+  color: #000; /* Black text color */
+}
+
+.ant-menu-item:hover {
+  background-color: #ff0000 !important; /* Red background on hover */
+  color: #fff !important; /* White text on hover */
+}
+
+.ant-menu-light .ant-menu-item-selected:hover {
+  background-color: #ff0000 !important; /* Keep the red background on hover when selected */
+}
+
+.anticon {
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100% !important;
+  }
+}
