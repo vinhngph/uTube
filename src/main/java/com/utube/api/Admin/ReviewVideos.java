@@ -33,7 +33,7 @@ public class ReviewVideos extends HttpServlet {
             return;
         }
 
-        if (!AdminDAO.isStaff(userId)) {
+        if (!AdminDAO.isAdmin(userId)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

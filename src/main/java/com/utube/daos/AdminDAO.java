@@ -12,7 +12,7 @@ import com.utube.dtos.VideoDTO;
 import com.utube.utils.DBConnect;
 
 public class AdminDAO {
-    public static boolean isStaff(int userId) {
+    public static boolean isAdmin(int userId) {
         Connection conn = DBConnect.getConnection();
         try {
             String query = "SELECT user_role FROM User WHERE user_id = ?";
