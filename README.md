@@ -1,5 +1,6 @@
 # uTube 
-🔗 [https://www.nguyenphucvinh.io.vn/](https://www.nguyenphucvinh.io.vn/)
+🔗 [https://utube-video.vercel.app/](https://utube-video.vercel.app/)
+🔗 [https://utube.nguyenphucvinh.io.vn/](https://utube.nguyenphucvinh.io.vn/)
 
 ## Collaborators
 - Nguyễn Phúc Vinh - ITITIU21350
