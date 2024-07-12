@@ -44,7 +44,7 @@ CREATE TABLE Video
 (
     video_id          VARCHAR(255) PRIMARY KEY,
     video_title       VARCHAR(255) NOT NULL,
-    video_description VARCHAR(255) NOT NULL,
+    video_description LONGTEXT NOT NULL,
     video_date        TIMESTAMP    NOT NULL,
     video_status      BOOLEAN      NOT NULL
 );

@@ -1,4 +1,4 @@
-package com.utube.controller;
+package com.utube.api;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/login" })
+@WebServlet(urlPatterns = { "/api/login" })
 @MultipartConfig()
 public class Login extends HttpServlet {
     @Override
