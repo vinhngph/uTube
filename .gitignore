@@ -44,3 +44,4 @@ storage
 build
 
 .env
+config.properties
