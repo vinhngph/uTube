@@ -61,12 +61,12 @@ ENV JAVA_HOME=/app/jdk-22.0.1
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Install Tomcat
-RUN curl -O "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.25/bin/apache-tomcat-10.1.25.tar.gz" && \
-    tar -xvf apache-tomcat-10.1.25.tar.gz && \
-    rm -rf apache-tomcat-10.1.25.tar.gz
+RUN curl -O "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.26/bin/apache-tomcat-10.1.26.tar.gz" && \
+    tar -xvf apache-tomcat-10.1.26.tar.gz && \
+    rm -rf apache-tomcat-10.1.26.tar.gz
 
 # Set the CATALINA_HOME environment variable
-ENV CATALINA_HOME=/app/apache-tomcat-10.1.25
+ENV CATALINA_HOME=/app/apache-tomcat-10.1.26
 ENV PATH=$CATALINA_HOME/bin:$PATH
 
 # Copy the WAR file to the Tomcat webapps directory
