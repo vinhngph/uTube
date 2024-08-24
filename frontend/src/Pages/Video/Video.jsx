@@ -3,14 +3,13 @@ import axios from 'axios';
 import { useParams, useLocation } from 'react-router-dom';
 import './Video.css'; // Assuming you have custom styles
 import { API } from '../../constants';
-import { message, Button, Typography } from 'antd';
-import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { Button, Typography } from 'antd';
+import { LikeOutlined, DislikeOutlined, EyeOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
 const Video = () => {
   const { videoId } = useParams();
-  const [videoUrl, setVideoUrl] = useState('');
   const [videoInfo, setVideoInfo] = useState({ title: '', description: '', date: '', owner: '' });
   const [interaction, setInteraction] = useState({ views: 0, likes: 0, dislikes: 0 });
   const [error, setError] = useState('');
@@ -84,6 +83,8 @@ const Video = () => {
         if (response.status === 200) {
           if (response.data.trackTime > 0) {
             videoRef.current.currentTime = response.data.trackTime;
+            videoRef.current.play();
+          } else {
             videoRef.current.play();
           }
         }
@@ -202,29 +203,29 @@ const Video = () => {
           <div className="video-layout">
             <div className="video-column">
               <div className="video-wrapper">
-                <video ref={videoRef} controls className="video-player" autoPlay>
-                  <source src={API + `/api/video?id=${videoId}`} type="video/webm" />
+                <video ref={videoRef} controls className="video-player" autoPlay >
+                  <source src={API + `/api/video?id=${videoId}`} type="video/mp4" />
                 </video>
               </div>
             </div>
             <div className="info-column">
-              <Title level={2} className="video-title">{videoInfo.title}</Title>
+              <Title level={2} className="video-title"><div><strong>{videoInfo.title}</strong></div></Title>
+              <div className="video-description"><div>{videoInfo.description}</div></div>
               <div className="interaction-buttons">
-                <Button type="primary" size="large" onClick={handleLike} icon={<LikeOutlined />}>
-                  Like {interaction.likes}
+                <Button className='like-button' type="danger" size="large" onClick={handleLike} icon={<LikeOutlined />}>
+                  <strong>Like {interaction.likes}</strong>
                 </Button>
-                <Button type="danger" size="large" onClick={handleDislike} icon={<DislikeOutlined />}>
-                  Dislike {interaction.dislikes}
+                <Button className='dislike-button' type="danger" size="large" onClick={handleDislike} icon={<DislikeOutlined />}>
+                  <strong>Dislike {interaction.dislikes}</strong>
                 </Button>
               </div>
 
-              <p className="video-date-1">Posted on: {videoInfo.date}</p>
-              <p className="video-owner">Channel: {videoInfo.owner}</p>
-              <Paragraph className="video-description">{videoInfo.description}</Paragraph>
+              <p className="video-date-1"><div className="date-icon"><ClockCircleOutlined /> <em>{videoInfo.date}</em></div></p>
+              <p className="video-owner"><div className="channel-icon"><UserOutlined /> {videoInfo.owner}</div></p>
             </div>
           </div>
           <div className="video-views-1">
-            Views: {interaction.views}
+            <strong><span><EyeOutlined /></span> Views: {interaction.views}</strong>
           </div>
         </>
       )}

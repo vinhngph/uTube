@@ -1,1 +1,1 @@
-export const API = "http://175.41.183.124:4000/"
+export const API = "http://localhost:8080";

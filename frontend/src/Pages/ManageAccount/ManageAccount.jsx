@@ -209,7 +209,7 @@ const ManageAccount = ({sidebar}) => {
                         })}
                     />
 
-                    <h2>Admins</h2>
+                    <h2>Staffs</h2>
                     <Table
                         columns={columns}
                         dataSource={filteredAccounts(staffs)}

@@ -1,4 +1,4 @@
-package com.utube.controller;
+package com.utube.api;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = { "/register" })
+@WebServlet(urlPatterns = { "/api/register" })
 @MultipartConfig()
 public class Register extends HttpServlet {
     @Override

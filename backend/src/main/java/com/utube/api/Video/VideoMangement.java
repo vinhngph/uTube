@@ -1,6 +1,7 @@
 package com.utube.api.Video;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,15 +45,32 @@ public class VideoMangement extends HttpServlet {
                         "storage");
             }
 
-            String videoPath = storagePath + File.separator + videoId + File.separator +
-                    videoId + ".webm";
-            Path videoFilePath = Paths.get(videoPath);
+            String videoPath = storagePath + File.separator + videoId;
 
-            if (!Files.exists(videoFilePath)) {
+            if (!Files.exists(Paths.get(videoPath))) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("Video not found");
                 return;
             }
+
+            FilenameFilter videoFilter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    String[] videoExtensions = { ".mp4", ".mkv", ".avi", ".flv", ".mov", ".wmv", ".webm" };
+                    for (String extension : videoExtensions) {
+                        if (name.toLowerCase().endsWith(extension)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            };
+
+            File dir = new File(videoPath);
+            File[] videoFiles = dir.listFiles(videoFilter);
+            File videoFile = videoFiles[0];
+            Path videoFilePath = videoFile.toPath();
+            String videoExt = videoFile.getName().substring(videoFile.getName().lastIndexOf("."));
 
             String range = request.getHeader("Range");
             if (range == null) {
@@ -88,7 +106,7 @@ public class VideoMangement extends HttpServlet {
             response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" +
                     fileLength);
             response.setHeader("Content-Length", String.valueOf(end - start + 1));
-            response.setHeader("Content-Disposition", "inline; filename=\"" + videoName + ".webm\"");
+            response.setHeader("Content-Disposition", "inline; filename=\"" + videoName + videoExt + "\"");
             response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
             try (InputStream input = Files.newInputStream(videoFilePath);

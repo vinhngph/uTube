@@ -127,9 +127,9 @@ const Navbar = ({ setSidebar }) => {
         <>
           {(user.role !== 1) && <Menu.Item onClick={handleInformation}>Account Information</Menu.Item>}
           <Menu.Item onClick={handleManageChannel}>Manage Channel</Menu.Item>
-          <Menu.Item onClick={handleLogout}>Log Out</Menu.Item>
           {(user.role === 1 || user.role === 2) && <Menu.Item onClick={handleManageAccount}>Manage Account</Menu.Item>}
           {(user.role === 1 || user.role === 2) && <Menu.Item onClick={handleAdminPage}>Censor</Menu.Item>}
+          <Menu.Item onClick={handleLogout}>Log Out</Menu.Item>
         </>
       ) : (
         <>

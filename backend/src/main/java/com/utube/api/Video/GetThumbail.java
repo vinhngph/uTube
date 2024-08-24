@@ -1,6 +1,7 @@
 package com.utube.api.Video;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,16 +41,34 @@ public class GetThumbail extends HttpServlet {
                 storagePath = Config.getProperty("STORAGE_PATH");
             }
 
-            String thumbnailPath = storagePath + File.separator + videoId + File.separator + videoId + ".png";
-            Path thumbnailFilePath = Paths.get(thumbnailPath);
+            String thumbnailPath = storagePath + File.separator + videoId;
 
-            if (!Files.exists(thumbnailFilePath)) {
+            if (!Files.exists(Paths.get(thumbnailPath))) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("Thumbnail not found");
                 return;
             }
 
-            response.setContentType("image/png");
+            FilenameFilter imageFilter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    String[] imageExtensions = { ".png", ".jpg", ".jpeg" , ".webp"};
+                    for (String extension : imageExtensions) {
+                        if (name.toLowerCase().endsWith(extension)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            };
+
+            File dir = new File(thumbnailPath);
+            File[] files = dir.listFiles(imageFilter);
+            File thumbnailFile = files[0];
+            Path thumbnailFilePath = thumbnailFile.toPath();
+
+            String thumbExt = thumbnailFilePath.toString().substring(thumbnailFilePath.toString().lastIndexOf(".") + 1);
+            response.setContentType("image/" + thumbExt);
 
             try (InputStream thumbnailStream = Files.newInputStream(thumbnailFilePath);
                     OutputStream outStream = response.getOutputStream()) {

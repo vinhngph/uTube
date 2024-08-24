@@ -51,7 +51,7 @@ const Login = () => {
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await fetch(API + '/login', {
+      const response = await fetch(API + '/api/login', {
         method: 'POST',
         body: formData,
         credentials: 'include', // Ensures cookies are included in the request

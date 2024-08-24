@@ -73,11 +73,17 @@ const History = ({ sidebar }) => {
         return;
       }
 
-      await axios.delete(API + `/api/user/history/${videoId}?user_id=${userId}`);
+      await axios.delete(API + `/api/user/history?video_id=${videoId}&user_id=${userId}`);
       fetchHistory();
     } catch (error) {
       console.error('Failed to delete video:', error);
     }
+  };
+
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${minutes}:${seconds.toFixed(0).padStart(2, '0')}`;
   };
 
   const columns = [
@@ -107,7 +113,7 @@ const History = ({ sidebar }) => {
       title: 'Watched',
       dataIndex: 'trackTime',
       key: 'trackTime',
-      render: (trackTime) => <span>{trackTime} seconds</span>,
+      render: (trackTime) => <span>{formatTime(trackTime)}</span>,
     },
     {
       title: 'Action',

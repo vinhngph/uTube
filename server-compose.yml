@@ -1,0 +1,23 @@
+services:
+  web-backend:
+    image: vinhnp/utube-web-backend
+    volumes:
+      - ../Storage:/app/storage
+    ports:
+      - "80:8080"
+    depends_on:
+      - web-database
+
+  web-database:
+    image: mysql:oraclelinux9
+    environment:
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_DATABASE: uTube
+    volumes:
+      - backup-db:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    expose:
+      - 3306
+
+volumes:
+  backup-db:

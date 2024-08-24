@@ -10,7 +10,7 @@ import Sidebar from '../../Components/Sidebar/Sidebar'; // Import Sidebar compon
 
 Modal.setAppElement('#root'); // Specify the root element for accessibility
 
-const AdminPage = ({sidebar}) => {
+const AdminPage = ({ sidebar }) => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -50,7 +50,7 @@ const AdminPage = ({sidebar}) => {
         setLoading(false); // Set loading to false on error
       });
   }, []);
-  
+
 
   const handleAccept = (videoId) => {
     const userId = getUserIdFromCookie();
@@ -109,57 +109,57 @@ const AdminPage = ({sidebar}) => {
 
   return (
     <>
-<Sidebar sidebar={sidebar} />
-<div className={`admin-page ${sidebar ? '' : 'large-container'}`}>
-      <ToastContainer />
-      <h1>Admin Page</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul className="video-list">
-        {videos.map(video => (
-          <li key={video.videoId} className="video-item">
-            <div onClick={() => openModal(video)}>
-              <img src={API + `/api/video/thumbnail?id=${video.videoId}`} alt={video.videoTitle} />
-            </div>
-            <div className="video-details">
-              <h2 className="video-title">{video.videoTitle}</h2>
-              <p className="video-description">{video.videoDescription}</p>
-              <p className="video-meta">{new Date(video.videoDate).toLocaleString()}</p>
-              <p className="video-owner">Owner: {video.videoChannelName}</p>
-              <p className="video-meta">Status: {video.videoStatus ? 'Accepted' : 'Pending'}</p>
-              <div className="button-group">
-                <button className="button-accept" onClick={() => handleAccept(video.videoId)}>Accept</button>
-                <button className="button-delete" onClick={() => handleDelete(video.videoId)}>Delete</button>
+      <Sidebar sidebar={sidebar} />
+      <div className={`admin-page ${sidebar ? '' : 'large-container'}`}>
+        <ToastContainer />
+        <h1>Admin Page</h1>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <ul className="video-list">
+          {videos.map(video => (
+            <li key={video.videoId} className="video-item">
+              <div onClick={() => openModal(video)}>
+                <img src={API + `/api/video/thumbnail?id=${video.videoId}`} alt={video.videoTitle} />
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+              <div className="video-details">
+                <h2 className="video-title">{video.videoTitle}</h2>
+                <p className="video-description">{video.videoDescription}</p>
+                <p className="video-meta">{new Date(video.videoDate).toLocaleString()}</p>
+                <p className="video-owner">Owner: {video.videoChannelName}</p>
+                <p className="video-meta">Status: {video.videoStatus ? 'Accepted' : 'Pending'}</p>
+                <div className="button-group">
+                  <button className="button-accept" onClick={() => handleAccept(video.videoId)}>Accept</button>
+                  <button className="button-delete" onClick={() => handleDelete(video.videoId)}>Delete</button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-      {selectedVideo && (
-        <Modal
-          isOpen={!!selectedVideo}
-          onRequestClose={closeModal}
-          className="react-modal-content"
-          overlayClassName="react-modal-overlay"
-        >
-          <h2>{selectedVideo.videoTitle}</h2>
-          <p>{selectedVideo.videoDescription}</p>
-          <p>{new Date(selectedVideo.videoDate).toLocaleString()}</p>
-          <p>Owner: {selectedVideo.videoOwner}</p>
-          <p>Status: {selectedVideo.videoStatus ? 'Accepted' : 'Pending'}</p>
-          <video width="100%" controls>
-            <source src={API + `/api/video?id=${selectedVideo.videoId}`} type="video/webm" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="button-group">
-            <button className="button-accept" onClick={() => { handleAccept(selectedVideo.videoId); closeModal(); }}>Accept</button>
-            <button className="button-delete" onClick={() => { handleDelete(selectedVideo.videoId); closeModal(); }}>Delete</button>
-          </div>
-        </Modal>
-      )}
-    </div>
+        {selectedVideo && (
+          <Modal
+            isOpen={!!selectedVideo}
+            onRequestClose={closeModal}
+            className="react-modal-content"
+            overlayClassName="react-modal-overlay"
+          >
+            <h2>{selectedVideo.videoTitle}</h2>
+            <p>{selectedVideo.videoDescription}</p>
+            <p>{new Date(selectedVideo.videoDate).toLocaleString()}</p>
+            <p>Owner: {selectedVideo.videoChannelName}</p>
+            <p>Status: {selectedVideo.videoStatus ? 'Accepted' : 'Pending'}</p>
+            <video width="100%" controls autoPlay>
+              <source src={API + `/api/video?id=${selectedVideo.videoId}`} type="video/webm" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="button-group">
+              <button className="button-accept" onClick={() => { handleAccept(selectedVideo.videoId); closeModal(); }}>Accept</button>
+              <button className="button-delete" onClick={() => { handleDelete(selectedVideo.videoId); closeModal(); }}>Delete</button>
+            </div>
+          </Modal>
+        )}
+      </div>
     </>
-    
+
   );
 };
 

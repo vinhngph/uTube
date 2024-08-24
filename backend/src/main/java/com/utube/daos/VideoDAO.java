@@ -32,12 +32,23 @@ public class VideoDAO {
         return false;
     }
 
-    public static String generateVideoId() {
+    private static String generateVideoId() {
         String videoId = "";
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         for (int i = 0; i < 11; i++) {
             int index = (int) (Math.random() * characters.length());
             videoId += characters.charAt(index);
+        }
+        return videoId;
+    }
+
+    public static String sendVideoId() {
+        String videoId = "";
+        while (true) {
+            videoId = generateVideoId();
+            if (!isIdExist(videoId)) {
+                break;
+            }
         }
         return videoId;
     }

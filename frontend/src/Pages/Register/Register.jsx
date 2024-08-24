@@ -93,7 +93,7 @@ const Register = () => {
         formDataToSend.append('fullName', formData.fullName);
         formDataToSend.append('dob', moment(formData.dob).format('YYYY-MM-DD'));
 
-        const response = await fetch(`${API}/register`, {
+        const response = await fetch(`${API}/api/register`, {
           method: 'POST',
           body: formDataToSend,
           credentials: 'include'
@@ -124,20 +124,19 @@ const Register = () => {
                 <div id="step1">
                   <h2>Account Information</h2>
                   <Form.Item
-                    label="Email:"
                     validateStatus={emailStatus === 'exists' ? 'error' : emailStatus === 'available' ? 'success' : ''}
                     help={emailStatus === 'exists' ? 'Email already taken' : ''}
                   >
                     <Input
+                      placeholder='Email'
                       type="email"
                       id="email"
                       name="email"
                       value={formData.email}
                       onChange={handleEmailChange}
                       required
-                      className={`${
-                        !formData.email || emailStatus === 'exists' ? 'input-black' : 'input-white'
-                      } ${emailStatus === 'exists' ? 'ant-input-error' : emailStatus === 'available' ? 'ant-input-success' : ''}`}
+                      className={`${!formData.email || emailStatus === 'exists' ? 'input-black' : 'input-white'
+                        } ${emailStatus === 'exists' ? 'ant-input-error' : emailStatus === 'available' ? 'ant-input-success' : ''}`}
                       suffix={
                         emailStatus === 'exists' ? (
                           <span className="input-suffix">{'Email already taken'}</span>
@@ -147,20 +146,19 @@ const Register = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Username:"
                     validateStatus={usernameStatus === 'exists' ? 'error' : usernameStatus === 'available' ? 'success' : ''}
                     help={usernameStatus === 'exists' ? 'Username already taken' : ''}
                   >
                     <Input
+                      placeholder='Username'
                       type="text"
                       id="username"
                       name="username"
                       value={formData.username}
                       onChange={handleUsernameChange}
                       required
-                      className={`${
-                        !formData.username || usernameStatus === 'exists' ? 'input-black' : 'input-white'
-                      } ${usernameStatus === 'exists' ? 'ant-input-error' : usernameStatus === 'available' ? 'ant-input-success' : ''}`}
+                      className={`${!formData.username || usernameStatus === 'exists' ? 'input-black' : 'input-white'
+                        } ${usernameStatus === 'exists' ? 'ant-input-error' : usernameStatus === 'available' ? 'ant-input-success' : ''}`}
                       suffix={
                         usernameStatus === 'exists' ? (
                           <span className="input-suffix">{'Username already taken'}</span>
@@ -169,8 +167,9 @@ const Register = () => {
                     />
                   </Form.Item>
 
-                  <Form.Item label="Password:">
+                  <Form.Item>
                     <Input.Password
+                      placeholder='Password'
                       id="password"
                       name="password"
                       value={formData.password}
@@ -180,8 +179,8 @@ const Register = () => {
                   </Form.Item>
 
                   <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Next
+                    <Button type="default" htmlType="submit">
+                      <h3>Next</h3>
                     </Button>
                     {error && <p className="error">{error}</p>}
                   </Form.Item>
@@ -191,8 +190,9 @@ const Register = () => {
               {step === 2 && (
                 <div id="step2">
                   <h2>Personal Information</h2>
-                  <Form.Item label="Full Name:">
+                  <Form.Item>
                     <Input
+                      placeholder='Full name'
                       type="text"
                       id="fullname"
                       name="fullName"
@@ -202,8 +202,9 @@ const Register = () => {
                     />
                   </Form.Item>
 
-                  <Form.Item label="Date of Birth:">
+                  <Form.Item>
                     <DatePicker
+                      placeholder='Date of Birth'
                       id="dob"
                       name="dob"
                       value={formData.dob ? moment(formData.dob, 'YYYY-MM-DD') : null}
@@ -213,17 +214,15 @@ const Register = () => {
                   </Form.Item>
 
                   <Form.Item className="custom-button-item">
-  <Button type="default" onClick={prevStep} className="custom-back-button">
-    Back
-  </Button>
-</Form.Item>
-<Form.Item className="custom-button-item">
-  <Button type="primary" htmlType="submit" className="custom-complete-button">
-    Complete
-  </Button>
-</Form.Item>
-
-
+                    <Button type="default" onClick={prevStep} className="custom-back-button">
+                      <h3>Back</h3>
+                    </Button>
+                  </Form.Item>
+                  <Form.Item className="custom-button-item">
+                    <Button type="default" htmlType="submit" className="custom-complete-button">
+                      <h3>Complete</h3>
+                    </Button>
+                  </Form.Item>
                 </div>
               )}
             </Form>

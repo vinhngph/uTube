@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Typography, Spin, Alert, Button, DatePicker, message } from 'antd';
+import { Form, Input, Typography, Spin, Alert, Button, DatePicker, message, Table } from 'antd';
 import axios from 'axios';
 import { API } from '../../constants';
 import './AccountInfo.css';
@@ -28,10 +28,11 @@ const getUserIdFromCookie = () => {
   return null;
 };
 
-const AccountInfo = ({sidebar}) => {
+const AccountInfo = ({ sidebar }) => {
   const [accountDetails, setAccountDetails] = useState(null);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
@@ -76,6 +77,19 @@ const AccountInfo = ({sidebar}) => {
         const user_fullname = details.user_fullname;
 
         setAccountDetails({ user_dob: user_dob, user_id: user_id, user_fullname: user_fullname, email: user.email, username: user.username });
+
+        // Fetch sessions
+        const sessionsResponse = await fetch(API + `/api/accounts/sessions?user_id=${userId}`);
+        if (sessionsResponse.status === 400) {
+          setError('Missing parameter');
+          return;
+        }
+        if (sessionsResponse.status === 500) {
+          setError('Server error');
+          return;
+        }
+        const sessions = await sessionsResponse.json();
+        setSessions(sessions);
       } catch (error) {
         setError('Failed to fetch account details');
       }
@@ -105,7 +119,6 @@ const AccountInfo = ({sidebar}) => {
       }
 
       const { user_fullname, user_dob } = accountDetails;
-      console.log(user_dob)
 
       await axios.put(API + `/api/accounts/details?user_id=${userId}&full_name=${user_fullname}&dob=${user_dob}`);
 
@@ -117,6 +130,12 @@ const AccountInfo = ({sidebar}) => {
     }
   };
 
+  const formatSessionTime = (timestamp) => {
+    // Implement your own logic for formatting the timestamp
+    const formattedTime = new Date(timestamp).toLocaleString(); // Example format, adjust as needed
+    return formattedTime;
+  };
+
   if (error) {
     return <Alert message="Error" description={error} type="error" showIcon />;
   }
@@ -125,43 +144,68 @@ const AccountInfo = ({sidebar}) => {
     return <Spin size="large" />;
   }
 
+  const sessionColumns = [
+    {
+      title: 'Session ID',
+      dataIndex: 'sessionId',
+      key: 'sessionId',
+    },
+    {
+      title: 'User ID',
+      dataIndex: 'sessionUser',
+      key: 'sessionUser',
+    },
+    {
+      title: 'Session Time',
+      dataIndex: 'sessionTime',
+      key: 'sessionTime',
+      render: (timestamp) => formatSessionTime(timestamp),
+    },
+    {
+      title: 'Session Device',
+      dataIndex: 'sessionDevice',
+      key: 'sessionDevice',
+    },
+  ];
+
   return (
     <>
-<Sidebar sidebar={sidebar} />
-<div className={`account-info-container ${sidebar ? '' : 'large-container'}`}>
-      <Title level={2} className="account-info-title">Account Details</Title>
-      <Form layout="vertical" className="account-info-form">
-        <Form.Item label="User ID">
-          <Input value={accountDetails.user_id} readOnly />
-        </Form.Item>
-        <Form.Item label="Email">
-          <Input value={accountDetails.email} readOnly />
-        </Form.Item>
-        <Form.Item label="Username">
-          <Input value={accountDetails.username} readOnly />
-        </Form.Item>
-        <Form.Item label="Full Name">
-          {isEditing ? (
-            <Input value={accountDetails.user_fullname} onChange={handleChangeFullName} />
-          ) : (
-            <Input value={accountDetails.user_fullname} readOnly />
-          )}
-        </Form.Item>
-        <Form.Item label="Date of Birth">
-          {isEditing ? (
-            <Input type='date' value={accountDetails.user_dob} onChange={handleChangeDOB} />
-          ) : (
-            <Input type='date' value={accountDetails.user_dob} readOnly />
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={isEditing ? handleSave : handleToggleEdit}>
-            {isEditing ? 'Save' : 'Edit'}
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
-    
+      <Sidebar sidebar={sidebar} />
+      <div className={`account-info-container ${sidebar ? '' : 'large-container'}`}>
+        <Title level={2} className="account-info-title">Account Details</Title>
+        <Form layout="vertical" className="account-info-form">
+          <Form.Item label="User ID">
+            <Input value={accountDetails.user_id} readOnly />
+          </Form.Item>
+          <Form.Item label="Email">
+            <Input value={accountDetails.email} readOnly />
+          </Form.Item>
+          <Form.Item label="Username">
+            <Input value={accountDetails.username} readOnly />
+          </Form.Item>
+          <Form.Item label="Full Name">
+            {isEditing ? (
+              <Input value={accountDetails.user_fullname} onChange={handleChangeFullName} />
+            ) : (
+              <Input value={accountDetails.user_fullname} readOnly />
+            )}
+          </Form.Item>
+          <Form.Item label="Date of Birth">
+            {isEditing ? (
+              <Input type='date' value={accountDetails.user_dob} onChange={handleChangeDOB} />
+            ) : (
+              <Input type='date' value={accountDetails.user_dob} readOnly />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" onClick={isEditing ? handleSave : handleToggleEdit}>
+              {isEditing ? 'Save' : 'Edit'}
+            </Button>
+          </Form.Item>
+        </Form>
+        <Title level={3} className="session-info-title">Session Information</Title>
+        <Table dataSource={sessions} columns={sessionColumns} rowKey="sessionId" />
+      </div>
     </>
   );
 };

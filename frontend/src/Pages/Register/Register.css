@@ -10,7 +10,7 @@
   background-image: url('../../assets/background_login.jpg');
 }
 
-:where(.css-dev-only-do-not-override-zg0ahe).ant-form-item .ant-form-item-label > label {
+:where(.css-dev-only-do-not-override-zg0ahe).ant-form-item .ant-form-item-label>label {
   color: #fff;
 }
 
@@ -31,12 +31,11 @@
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   color: #fff;
-  text-align: center;
 }
 
 /* Title style */
 .wrapper h2 {
-  font-size: 24px;
+  font-size: 30px;
   margin-bottom: 20px;
 }
 
@@ -46,8 +45,20 @@
 
 /* Input field styles */
 .wrapper .ant-input,
-.wrapper .ant-input-password,
+.wrapper .ant-input-password {
+  font-size: 20px;
+  line-height: 40px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+}
+
 .wrapper .ant-picker {
+  font-size: 20px;
+  height: 50px;
+  width: 100%;
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
   color: #fff;
@@ -58,14 +69,20 @@
 .wrapper .ant-input-password:focus,
 .wrapper .ant-picker:hover,
 .wrapper .ant-picker-focused {
+  font-size: 20px;
   border-color: #fff;
 }
 
 /* Placeholder text color */
 .wrapper .ant-input::placeholder,
 .wrapper .ant-input-password::placeholder,
-.wrapper .ant-picker-input > input::placeholder {
+.wrapper .ant-picker-input>input::placeholder {
+  font-size: 20px;
   color: rgba(255, 255, 255, 0.6);
+}
+
+.wrapper .ant-picker-input>input:not(:placeholder-shown) {
+  font-size: 20px;
 }
 
 /* Input validation states */
@@ -98,13 +115,13 @@
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Custom button styles */
-.custom-button-item {
-  margin-top: 20px;
+.wrapper ant-button {
+  background-color: rgb(129, 219, 219);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s;
 }
 
 /* General adjustments */
 .ant-picker {
   width: 100%;
 }
-

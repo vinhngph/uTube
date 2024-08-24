@@ -44,3 +44,7 @@ storage
 build
 
 .env
+config.properties
+
+package-lock.json
+yar.lock
